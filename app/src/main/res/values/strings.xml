@@ -4,6 +4,8 @@
     <string-array name="category_array">
         <item>本</item>
         <item>衣服</item>
+        <item>文具</item>
+        <item>クラブ関連</item>
         <item>その他</item>
     </string-array>
 

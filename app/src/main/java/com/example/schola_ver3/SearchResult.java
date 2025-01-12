@@ -3,11 +3,14 @@ package com.example.schola_ver3;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.Button;
+import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
@@ -16,8 +19,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-public class SearchResult extends AppCompatActivity implements View.OnClickListener {
-    private Button productbtn; // 商品詳細を見るボタン
+public class SearchResult extends AppCompatActivity {
     private ListView resultsListView;
     private ProductDatabaseHelper dbHelper;
 
@@ -30,43 +32,45 @@ public class SearchResult extends AppCompatActivity implements View.OnClickListe
         dbHelper = new ProductDatabaseHelper(this);
         resultsListView = findViewById(R.id.resultsListView);
 
-        // Intentから検索キーワードを取得
         Intent intent = getIntent();
         String query = intent.getStringExtra("SEARCH_QUERY");
 
-        // 検索結果を表示する
         displaySearchResults(query);
 
         resultsListView.setOnItemClickListener((parent, view, position, id) -> {
-            HashMap<String, String> selectedItem = (HashMap<String, String>) resultsListView.getItemAtPosition(position);
-            Intent detailIntent = new Intent(SearchResult.this, ProductDetail.class);
-            detailIntent.putExtra("productName", selectedItem.get("商品名"));
-            detailIntent.putExtra("productDescription", selectedItem.get("商品説明"));
-            detailIntent.putExtra("category", selectedItem.get("カテゴリ"));
-            detailIntent.putExtra("productPrice", selectedItem.get("金額"));
-            detailIntent.putExtra("deliveryMethod", selectedItem.get("配送方法"));
-            detailIntent.putExtra("date", selectedItem.get("出品日時"));
-            detailIntent.putExtra("region", selectedItem.get("地域"));
-            detailIntent.putExtra("sellerId", selectedItem.get("出品者ID"));
-            startActivity(detailIntent);
+            HashMap<String, Object> selectedItem = (HashMap<String, Object>) resultsListView.getItemAtPosition(position);
+            navigateToProductDetail(selectedItem);
         });
     }
 
     private void displaySearchResults(String query) {
         SQLiteDatabase db = dbHelper.getReadableDatabase();
-        Cursor cursor = db.rawQuery("SELECT * FROM 商品テーブル WHERE 商品名 LIKE ?", new String[]{"%" + query + "%"});
+        String[] projection = {
+                "商品ID", "商品名", "商品説明", "商品画像", "カテゴリ", "金額", "配送方法", "出品日時", "地域", "出品者ID"
+        };
+        String selection = "商品名 LIKE ?";
+        String[] selectionArgs = {"%" + query + "%"};
 
-        ArrayList<HashMap<String, String>> results = new ArrayList<>();
+        Cursor cursor = db.query(
+                "商品テーブル",
+                projection,
+                selection,
+                selectionArgs,
+                null,
+                null,
+                null
+        );
+
+        ArrayList<HashMap<String, Object>> results = new ArrayList<>();
         while (cursor.moveToNext()) {
-            HashMap<String, String> item = new HashMap<>();
-            item.put("商品名", cursor.getString(cursor.getColumnIndex("商品名")));
-            item.put("金額", cursor.getString(cursor.getColumnIndex("金額")));
-            item.put("商品説明", cursor.getString(cursor.getColumnIndex("商品説明")));
-            item.put("カテゴリ", cursor.getString(cursor.getColumnIndex("カテゴリ")));
-            item.put("配送方法", cursor.getString(cursor.getColumnIndex("配送方法")));
-            item.put("出品日時", cursor.getString(cursor.getColumnIndex("出品日時")));
-            item.put("地域", cursor.getString(cursor.getColumnIndex("地域")));
-            item.put("出品者ID", cursor.getString(cursor.getColumnIndex("出品者ID")));
+            HashMap<String, Object> item = new HashMap<>();
+            for (String column : projection) {
+                if (column.equals("商品画像")) {
+                    item.put(column, cursor.getBlob(cursor.getColumnIndex(column)));
+                } else {
+                    item.put(column, cursor.getString(cursor.getColumnIndex(column)));
+                }
+            }
             results.add(item);
         }
         cursor.close();
@@ -77,16 +81,38 @@ public class SearchResult extends AppCompatActivity implements View.OnClickListe
             SimpleAdapter adapter = new SimpleAdapter(
                     this,
                     results,
-                    android.R.layout.simple_list_item_2,
-                    new String[]{"商品名", "金額"},
-                    new int[]{android.R.id.text1, android.R.id.text2}
+                    R.layout.search_result_item,
+                    new String[]{"商品名", "金額", "商品画像"},
+                    new int[]{R.id.productNameTextView, R.id.productPriceTextView, R.id.productImageView}
             );
+
+            adapter.setViewBinder(new SimpleAdapter.ViewBinder() {
+                @Override
+                public boolean setViewValue(View view, Object data, String textRepresentation) {
+                    if (view instanceof ImageView && data instanceof byte[]) {
+                        ImageView imageView = (ImageView) view;
+                        byte[] imageData = (byte[]) data;
+                        Bitmap bitmap = BitmapFactory.decodeByteArray(imageData, 0, imageData.length);
+                        imageView.setImageBitmap(bitmap);
+                        return true;
+                    }
+                    return false;
+                }
+            });
+
             resultsListView.setAdapter(adapter);
         }
     }
 
-    @Override
-    public void onClick(View v) {
-        // 他のボタンの処理が必要な場合はここに追加
+    private void navigateToProductDetail(HashMap<String, Object> item) {
+        Intent detailIntent = new Intent(SearchResult.this, ProductDetail.class);
+        for (String key : item.keySet()) {
+            if (item.get(key) instanceof String) {
+                detailIntent.putExtra(key, (String) item.get(key));
+            } else if (item.get(key) instanceof byte[]) {
+                detailIntent.putExtra(key, (byte[]) item.get(key));
+            }
+        }
+        startActivity(detailIntent);
     }
 }

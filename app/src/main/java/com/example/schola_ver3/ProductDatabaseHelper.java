@@ -5,14 +5,14 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
 public class ProductDatabaseHelper extends SQLiteOpenHelper {
-    private static final int DATABASE_VERSION = 1;
+    private static final int DATABASE_VERSION = 2;
     private static final String DATABASE_NAME = "product.db";
 
     private static final String TABLE_NAME = "商品テーブル";
     private static final String COLUMN_ID = "商品ID";
     private static final String COLUMN_SELLER_ID = "出品者ID";
     private static final String COLUMN_URL = "商品URL";
-    private static final String COLUMN_IMAGE = "商品画像名";
+    private static final String COLUMN_IMAGE = "商品画像";
     private static final String COLUMN_PRICE = "金額";
     private static final String COLUMN_NAME = "商品名";
     private static final String COLUMN_CATEGORY = "カテゴリ";
@@ -27,7 +27,7 @@ public class ProductDatabaseHelper extends SQLiteOpenHelper {
                     COLUMN_ID + " TEXT PRIMARY KEY," +
                     COLUMN_SELLER_ID + " TEXT," +
                     COLUMN_URL + " TEXT," +
-                    COLUMN_IMAGE + " TEXT," +
+                    COLUMN_IMAGE + " BLOB," +
                     COLUMN_PRICE + " INTEGER," +
                     COLUMN_NAME + " TEXT," +
                     COLUMN_CATEGORY + " TEXT," +

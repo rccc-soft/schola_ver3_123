@@ -3,11 +3,16 @@ package com.example.schola_ver3;
 import android.content.ContentValues;
 import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
+import android.graphics.Bitmap;
+import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.TextView;
 
@@ -16,6 +21,8 @@ import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AppCompatActivity;
 
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
@@ -24,11 +31,15 @@ import java.util.Random;
 public class Exhibit extends AppCompatActivity implements View.OnClickListener {
     private static final int REQUEST_CODE = 1;
     private ActivityResultLauncher<Intent> resultLauncher;
+    private ActivityResultLauncher<String> imagePickerLauncher;
 
     private Button decisionbtn;
-    private EditText productNameEditText, productDescriptionEditText, productPriceEditText, imageNameEditText;
+    private Button selectImageBtn;
+    private EditText productNameEditText, productDescriptionEditText, productPriceEditText;
+    private ImageView productImageView;
     private Spinner categorySpinner, deliveryMethodSpinner, regionSpinner;
     private ProductDatabaseHelper dbHelper;
+    private byte[] imageByteArray;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,35 +50,35 @@ public class Exhibit extends AppCompatActivity implements View.OnClickListener {
         initializeViews();
         setupSpinners();
         setupResultLauncher();
+        setupImagePickerLauncher();
         dbHelper = new ProductDatabaseHelper(this);
     }
 
     private void initializeViews() {
         decisionbtn = findViewById(R.id.decisionbtn);
         decisionbtn.setOnClickListener(this);
+        selectImageBtn = findViewById(R.id.selectImageBtn);
+        selectImageBtn.setOnClickListener(this);
         productNameEditText = findViewById(R.id.productNameEditText);
         productDescriptionEditText = findViewById(R.id.productDescriptionEditText);
         productPriceEditText = findViewById(R.id.productPriceEditText);
-        imageNameEditText = findViewById(R.id.imageNameEditText);
+        productImageView = findViewById(R.id.productImageView);
         categorySpinner = findViewById(R.id.categorySpinner);
         deliveryMethodSpinner = findViewById(R.id.deliveryMethodSpinner);
         regionSpinner = findViewById(R.id.regionSpinner);
     }
 
     private void setupSpinners() {
-        // カテゴリの設定
         ArrayAdapter<CharSequence> categoryAdapter = ArrayAdapter.createFromResource(this,
                 R.array.category_array, android.R.layout.simple_spinner_item);
         categoryAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         categorySpinner.setAdapter(categoryAdapter);
 
-        // 配送方法の設定
         ArrayAdapter<CharSequence> deliveryAdapter = ArrayAdapter.createFromResource(this,
                 R.array.delivery_method_array, android.R.layout.simple_spinner_item);
         deliveryAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         deliveryMethodSpinner.setAdapter(deliveryAdapter);
 
-        // 地域の設定
         ArrayAdapter<CharSequence> regionAdapter = ArrayAdapter.createFromResource(this,
                 R.array.region_array, android.R.layout.simple_spinner_item);
         regionAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
@@ -88,12 +99,33 @@ public class Exhibit extends AppCompatActivity implements View.OnClickListener {
         );
     }
 
+    private void setupImagePickerLauncher() {
+        imagePickerLauncher = registerForActivityResult(
+                new ActivityResultContracts.GetContent(),
+                uri -> {
+                    if (uri != null) {
+                        try {
+                            Bitmap bitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(), uri);
+                            productImageView.setImageBitmap(bitmap);
+                            ByteArrayOutputStream stream = new ByteArrayOutputStream();
+                            bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream);
+                            imageByteArray = stream.toByteArray();
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }
+        );
+    }
+
     @Override
     public void onClick(View v) {
         if (v.getId() == R.id.decisionbtn) {
             if (validateInput()) {
                 navigateToExhibitSave();
             }
+        } else if (v.getId() == R.id.selectImageBtn) {
+            imagePickerLauncher.launch("image/*");
         }
     }
 
@@ -124,14 +156,14 @@ public class Exhibit extends AppCompatActivity implements View.OnClickListener {
             isValid = false;
         }
 
-        if (categorySpinner.getSelectedItemPosition() == 0) {
+        if (categorySpinner.getSelectedItemPosition() == AdapterView.INVALID_POSITION) {
             ((TextView)categorySpinner.getSelectedView()).setError("カテゴリを選択してください");
             isValid = false;
         }
 
-        if (imageNameEditText.getText().toString().trim().isEmpty()) {
-            imageNameEditText.setError("画像名を入力してください");
-            isValid = false;
+        if (imageByteArray == null) {
+            // 画像が選択されていない場合のエラー処理
+            return false;
         }
 
         return isValid;
@@ -143,7 +175,6 @@ public class Exhibit extends AppCompatActivity implements View.OnClickListener {
         intent.putExtra("productDescription", productDescriptionEditText.getText().toString());
         intent.putExtra("productPrice", productPriceEditText.getText().toString());
         intent.putExtra("category", categorySpinner.getSelectedItem().toString());
-        intent.putExtra("imageName", imageNameEditText.getText().toString());
         intent.putExtra("deliveryMethod", deliveryMethodSpinner.getSelectedItem().toString());
         intent.putExtra("region", regionSpinner.getSelectedItem().toString());
         resultLauncher.launch(intent);
@@ -157,7 +188,7 @@ public class Exhibit extends AppCompatActivity implements View.OnClickListener {
         values.put("商品ID", productId);
         values.put("商品名", productNameEditText.getText().toString());
         values.put("商品説明", productDescriptionEditText.getText().toString());
-        values.put("商品画像名", imageNameEditText.getText().toString());
+        values.put("商品画像", imageByteArray);
         values.put("商品URL", ""); // 仮の実装。実際のURLの生成ロジックが必要
         values.put("カテゴリ", categorySpinner.getSelectedItem().toString());
         values.put("金額", Integer.parseInt(productPriceEditText.getText().toString()));
@@ -186,7 +217,7 @@ public class Exhibit extends AppCompatActivity implements View.OnClickListener {
     }
 
     private void navigateToHomePage() {
-        Intent intent = new Intent(getApplication(), MainActivity.class);
+        Intent intent = new Intent(getApplication(), HomePage.class);
         startActivity(intent);
     }
 

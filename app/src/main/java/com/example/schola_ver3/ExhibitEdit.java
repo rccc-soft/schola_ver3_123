@@ -3,27 +3,41 @@ package com.example.schola_ver3;
 import android.content.ContentValues;
 import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.util.Log;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AppCompatActivity;
+
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 
 public class ExhibitEdit extends AppCompatActivity implements View.OnClickListener {
     private static final String TAG = "ExhibitEdit";
     private Button savebtn;
     private Button exhibitcancelbtn;
     private Button tradecancelbtn;
+    private Button changeImageBtn;
     private EditText productNameEditText, productDescriptionEditText, productPriceEditText;
+    private ImageView productImageView;
     private Spinner categorySpinner, deliveryMethodSpinner, regionSpinner;
     private ProductDatabaseHelper dbHelper;
     private String productId;
+    private byte[] imageByteArray;
+    private ActivityResultLauncher<String> imagePickerLauncher;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,6 +47,7 @@ public class ExhibitEdit extends AppCompatActivity implements View.OnClickListen
 
         initializeViews();
         dbHelper = new ProductDatabaseHelper(this);
+        setupImagePickerLauncher();
 
         // Intentから商品情報を取得
         Intent intent = getIntent();
@@ -44,6 +59,12 @@ public class ExhibitEdit extends AppCompatActivity implements View.OnClickListen
         setCategorySpinnerSelection(intent.getStringExtra("カテゴリ"));
         setDeliveryMethodSpinnerSelection(intent.getStringExtra("配送方法"));
         setRegionSpinnerSelection(intent.getStringExtra("地域"));
+
+        imageByteArray = intent.getByteArrayExtra("商品画像");
+        if (imageByteArray != null) {
+            Bitmap bitmap = BitmapFactory.decodeByteArray(imageByteArray, 0, imageByteArray.length);
+            productImageView.setImageBitmap(bitmap);
+        }
 
         Log.d(TAG, "Received Product ID: " + productId);
     }
@@ -58,9 +79,13 @@ public class ExhibitEdit extends AppCompatActivity implements View.OnClickListen
         tradecancelbtn = findViewById(R.id.tradecancelbtn);
         tradecancelbtn.setOnClickListener(this);
 
+        changeImageBtn = findViewById(R.id.changeImageBtn);
+        changeImageBtn.setOnClickListener(this);
+
         productNameEditText = findViewById(R.id.productNameEditText);
         productDescriptionEditText = findViewById(R.id.productDescriptionEditText);
         productPriceEditText = findViewById(R.id.productPriceEditText);
+        productImageView = findViewById(R.id.productImageView);
 
         categorySpinner = findViewById(R.id.categorySpinner);
         deliveryMethodSpinner = findViewById(R.id.deliveryMethodSpinner);
@@ -87,6 +112,25 @@ public class ExhibitEdit extends AppCompatActivity implements View.OnClickListen
                 R.array.region_array, android.R.layout.simple_spinner_item);
         regionAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         regionSpinner.setAdapter(regionAdapter);
+    }
+
+    private void setupImagePickerLauncher() {
+        imagePickerLauncher = registerForActivityResult(
+                new ActivityResultContracts.GetContent(),
+                uri -> {
+                    if (uri != null) {
+                        try {
+                            Bitmap bitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(), uri);
+                            productImageView.setImageBitmap(bitmap);
+                            ByteArrayOutputStream stream = new ByteArrayOutputStream();
+                            bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream);
+                            imageByteArray = stream.toByteArray();
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }
+        );
     }
 
     private void setCategorySpinnerSelection(String category) {
@@ -129,6 +173,8 @@ public class ExhibitEdit extends AppCompatActivity implements View.OnClickListen
             startActivity(intent);
         } else if (v.getId() == R.id.tradecancelbtn) {
             // トレードキャンセルの処理を実装
+        } else if (v.getId() == R.id.changeImageBtn) {
+            imagePickerLauncher.launch("image/*");
         }
     }
 
@@ -150,6 +196,7 @@ public class ExhibitEdit extends AppCompatActivity implements View.OnClickListen
             values.put("カテゴリ", categorySpinner.getSelectedItem().toString());
             values.put("配送方法", deliveryMethodSpinner.getSelectedItem().toString());
             values.put("地域", regionSpinner.getSelectedItem().toString());
+            values.put("商品画像", imageByteArray);
 
             Log.d(TAG, "Updating product with ID: " + productId);
             Log.d(TAG, "Update values: " + values.toString());

@@ -33,7 +33,7 @@ public class ExhibitSuccess extends AppCompatActivity implements View.OnClickLis
 
     private void navigateToHomePage() {
         //HomePage
-        Intent intent = new Intent(getApplication(), TestActivity.class);
+        Intent intent = new Intent(getApplication(), HomePage.class);
         startActivity(intent);
         finish();
     }

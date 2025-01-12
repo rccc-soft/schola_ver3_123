@@ -30,11 +30,19 @@
         android:layout_height="wrap_content"
         android:hint="価格を入力" />
 
-    <EditText
-        android:id="@+id/imageNameEditText"
+    <Button
+        android:id="@+id/selectImageBtn"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="画像名を入力" />
+        android:text="画像を選択" />
+
+    <ImageView
+        android:id="@+id/productImageView"
+        android:layout_width="200dp"
+        android:layout_height="200dp"
+        android:scaleType="centerCrop"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="16dp"/>
 
     <Spinner
         android:id="@+id/categorySpinner"
