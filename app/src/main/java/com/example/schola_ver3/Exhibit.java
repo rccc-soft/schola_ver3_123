@@ -13,8 +13,10 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.ImageButton;
 
 import androidx.activity.EdgeToEdge;
 import androidx.activity.result.ActivityResultLauncher;
@@ -34,12 +36,13 @@ public class Exhibit extends AppCompatActivity implements View.OnClickListener {
     private ActivityResultLauncher<String> imagePickerLauncher;
 
     private Button decisionbtn;
-    private Button selectImageBtn;
+    private LinearLayout addpicture;
     private EditText productNameEditText, productDescriptionEditText, productPriceEditText;
     private ImageView productImageView;
     private Spinner categorySpinner, deliveryMethodSpinner, regionSpinner;
     private ProductDatabaseHelper dbHelper;
     private byte[] imageByteArray;
+    private ImageButton backButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,8 +60,8 @@ public class Exhibit extends AppCompatActivity implements View.OnClickListener {
     private void initializeViews() {
         decisionbtn = findViewById(R.id.decisionbtn);
         decisionbtn.setOnClickListener(this);
-        selectImageBtn = findViewById(R.id.selectImageBtn);
-        selectImageBtn.setOnClickListener(this);
+        addpicture = findViewById(R.id.addpicture);
+        addpicture.setOnClickListener(this);
         productNameEditText = findViewById(R.id.productNameEditText);
         productDescriptionEditText = findViewById(R.id.productDescriptionEditText);
         productPriceEditText = findViewById(R.id.productPriceEditText);
@@ -66,6 +69,8 @@ public class Exhibit extends AppCompatActivity implements View.OnClickListener {
         categorySpinner = findViewById(R.id.categorySpinner);
         deliveryMethodSpinner = findViewById(R.id.deliveryMethodSpinner);
         regionSpinner = findViewById(R.id.regionSpinner);
+        backButton = findViewById(R.id.backButton);
+        backButton.setOnClickListener(this);
     }
 
     private void setupSpinners() {
@@ -124,8 +129,10 @@ public class Exhibit extends AppCompatActivity implements View.OnClickListener {
             if (validateInput()) {
                 navigateToExhibitSave();
             }
-        } else if (v.getId() == R.id.selectImageBtn) {
+        } else if (v.getId() == R.id.addpicture) {
             imagePickerLauncher.launch("image/*");
+        } else if (v.getId() == R.id.backButton) {
+            finish();
         }
     }
 
