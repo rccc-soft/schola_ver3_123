@@ -45,7 +45,7 @@
             android:drawableStart="?android:attr/actionModeWebSearchDrawable"
             android:ems="10"
             android:inputType="text"
-            android:text=" 検索"
+            android:hint=" search for ..."
             android:padding="8dp" />
 
         <ListView

@@ -35,7 +35,7 @@
         android:layout_marginTop="10dp"
         android:background="@drawable/edittexy_background"
         android:drawableStart="?android:attr/actionModeWebSearchDrawable"
-        android:text=" 検索"
+        android:hint=" search for ..."
         app:layout_constraintTop_toBottomOf="@id/constraintLayout"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />

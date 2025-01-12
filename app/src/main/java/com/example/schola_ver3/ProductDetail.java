@@ -3,6 +3,7 @@ package com.example.schola_ver3;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -26,7 +27,6 @@ public class ProductDetail extends AppCompatActivity implements View.OnClickList
     private TextView priceTextView;
     private TextView deliveryMethodTextView;
     private TextView regionTextView;
-    private TextView sellerIdTextView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,11 +48,10 @@ public class ProductDetail extends AppCompatActivity implements View.OnClickList
         productImageView = findViewById(R.id.productImageView);
         productNameTextView = findViewById(R.id.productNameTextView);
         productDescriptionTextView = findViewById(R.id.productDescriptionTextView);
-        categoryTextView = findViewById(R.id.detailcategoryTextView);
-        priceTextView = findViewById(R.id.detailpriceTextView);
-        deliveryMethodTextView = findViewById(R.id.detaildeliveryMethodTextView);
-        regionTextView = findViewById(R.id.detailregionTextView);
-        sellerIdTextView = findViewById(R.id.detailsellerIdTextView);
+        categoryTextView = findViewById(R.id.categoryTextView); // 修正
+        priceTextView = findViewById(R.id.priceTextView); // 修正
+        deliveryMethodTextView = findViewById(R.id.deliveryMethodTextView); // 修正
+        regionTextView = findViewById(R.id.regionTextView); // 修正
     }
 
     private void setupClickListeners() {
@@ -73,18 +72,17 @@ public class ProductDetail extends AppCompatActivity implements View.OnClickList
 
         productNameTextView.setText(intent.getStringExtra("商品名"));
         productDescriptionTextView.setText(intent.getStringExtra("商品説明"));
-        categoryTextView.setText(intent.getStringExtra("カテゴリ"));
+        categoryTextView.setText("カテゴリ: " + intent.getStringExtra("カテゴリ")); // 修正
 
         String price = intent.getStringExtra("金額");
         if (price != null && !price.isEmpty()) {
-            priceTextView.setText(price + "円");
+            priceTextView.setText("価格: " + price + "円"); // 修正
         } else {
             priceTextView.setText("価格未設定");
         }
 
-        deliveryMethodTextView.setText(intent.getStringExtra("配送方法"));
-        regionTextView.setText(intent.getStringExtra("地域"));
-        sellerIdTextView.setText(intent.getStringExtra("出品者ID"));
+        deliveryMethodTextView.setText("配送方法: " + intent.getStringExtra("配送方法")); // 修正
+        regionTextView.setText("地域: " + intent.getStringExtra("地域")); // 修正
     }
 
     @Override

@@ -4,6 +4,7 @@ import android.content.ContentValues;
 import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
@@ -41,7 +42,7 @@ public class Exhibit extends AppCompatActivity implements View.OnClickListener {
     private ImageView productImageView;
     private Spinner categorySpinner, deliveryMethodSpinner, regionSpinner;
     private ProductDatabaseHelper dbHelper;
-    private byte[] imageByteArray;
+    private byte[] imageByteArray; // 画像データを保持
     private ImageButton backButton;
 
     @Override
@@ -178,12 +179,23 @@ public class Exhibit extends AppCompatActivity implements View.OnClickListener {
 
     private void navigateToExhibitSave() {
         Intent intent = new Intent(this, ExhibitSave.class);
+
+        // 商品情報を Intent に渡す
         intent.putExtra("productName", productNameEditText.getText().toString());
         intent.putExtra("productDescription", productDescriptionEditText.getText().toString());
         intent.putExtra("productPrice", productPriceEditText.getText().toString());
+
+        // カテゴリ、配送方法、地域を渡す
         intent.putExtra("category", categorySpinner.getSelectedItem().toString());
         intent.putExtra("deliveryMethod", deliveryMethodSpinner.getSelectedItem().toString());
         intent.putExtra("region", regionSpinner.getSelectedItem().toString());
+
+        // 画像の URI を追加
+        if (imageByteArray != null) {
+            Uri imageUri = Uri.parse(MediaStore.Images.Media.insertImage(getContentResolver(), BitmapFactory.decodeByteArray(imageByteArray, 0, imageByteArray.length), null, null));
+            intent.putExtra("productImageUri", imageUri.toString());
+        }
+
         resultLauncher.launch(intent);
     }
 
@@ -195,13 +207,13 @@ public class Exhibit extends AppCompatActivity implements View.OnClickListener {
         values.put("商品ID", productId);
         values.put("商品名", productNameEditText.getText().toString());
         values.put("商品説明", productDescriptionEditText.getText().toString());
-        values.put("商品画像", imageByteArray);
+        values.put("商品画像", imageByteArray); // 画像データを保存する場合
         values.put("商品URL", ""); // 仮の実装。実際のURLの生成ロジックが必要
         values.put("カテゴリ", categorySpinner.getSelectedItem().toString());
         values.put("金額", Integer.parseInt(productPriceEditText.getText().toString()));
         values.put("配送方法", deliveryMethodSpinner.getSelectedItem().toString());
         values.put("出品日時", new SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.getDefault()).format(new Date()));
-        values.put("地域", regionSpinner.getSelectedItemPosition() + 1);
+        values.put("地域", regionSpinner.getSelectedItemPosition() + 1); // 地域を保存する場合
         values.put("出品者ID", getCurrentUserId());
         values.put("購入済み", false);
 
