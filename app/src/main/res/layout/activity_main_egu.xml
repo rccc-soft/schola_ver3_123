@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/mainActivityLayout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:gravity="center"
+    android:padding="16dp"
+    tools:context=".MainActivity_egu">
+
+    <!-- MyPageへのボタン -->
+    <Button
+        android:id="@+id/buttonMyPage"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="マイページへ"
+        android:layout_marginBottom="16dp"
+        android:backgroundTint="#705B7C"
+        android:textColor="#FFFFFF" />
+
+    <!-- EvaluationSellへのボタン -->
+    <Button
+        android:id="@+id/buttonEvaluationSell"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="レビューを追加"
+        android:layout_marginBottom="16dp"
+        android:backgroundTint="#705B7C"
+        android:textColor="#FFFFFF" />
+
+    <!-- ReviewListActivityへのボタン -->
+    <Button
+        android:id="@+id/buttonReviewSellList"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="sellレビュー一覧"
+        android:backgroundTint="#705B7C"
+        android:textColor="#FFFFFF" />
+
+    <Button
+        android:id="@+id/buttonReviewBuyList"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="buyreview"
+        android:backgroundTint="#705B7C"
+        android:textColor="#FFFFFF" />
+
+</LinearLayout>

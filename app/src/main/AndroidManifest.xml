@@ -21,8 +21,26 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
-        <activity android:name=".MyPage" />
+        <activity android:name=".ReviewListActivity"
+            android:label="レビュー一覧"
+            android:parentActivityName=".MainActivity_egu">
+            <!-- Up navigation -->
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".MainActivity_egu" />
+        </activity>
+        <activity
+            android:name=".EvaluationSell"
+            android:exported="false" />
+        <activity
+            android:name=".EvaluationSellSend"
+            android:exported="false" />
+        <activity
+            android:name=".EvaluationSellSuccess"
+            android:exported="false" />
+        <activity
+            android:name=".MyPage"
+            android:exported="false" />
         <activity android:name=".TestActivity" />
         <activity android:name=".Exhibit" />
         <activity android:name=".ProductSearch" />

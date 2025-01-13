@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:card_view="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/cardViewReview"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_margin="8dp"
+    card_view:cardCornerRadius="8dp"
+    card_view:cardElevation="4dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="16dp">
+
+        <!-- レビュアーID -->
+        <TextView
+            android:id="@+id/textViewBuyerId"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="購入者ID: 222222"
+            android:textStyle="bold"
+            android:textSize="14sp" />
+
+        <!-- 評価スコア -->
+        <TextView
+            android:id="@+id/textViewReviewScore"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="評価: ★★★★★"
+            android:textSize="14sp"
+            android:layout_marginTop="4dp" />
+
+        <!-- レビューコメント -->
+        <TextView
+            android:id="@+id/textViewReviewComment"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="レビューコメント: とても良い商品でした！"
+            android:textSize="14sp"
+            android:layout_marginTop="4dp" />
+
+    </LinearLayout>
+
+</androidx.cardview.widget.CardView>

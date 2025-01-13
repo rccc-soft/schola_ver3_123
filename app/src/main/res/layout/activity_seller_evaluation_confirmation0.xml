@@ -1,0 +1,200 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#FFF5F8">
+
+    <!-- メインコンテンツ -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:padding="16dp">
+
+        <!-- 戻るボタン -->
+        <ImageButton
+            android:id="@+id/imageButton2"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_marginStart="15dp"
+            android:layout_marginTop="11dp"
+            android:background="#FFFFFF"
+            android:contentDescription="TODO"
+            android:scaleType="fitXY"
+            app:srcCompat="@drawable/backbutton" />
+
+        <!-- 評価画面タイトル -->
+        <TextView
+            android:id="@+id/evaluationTitle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="24dp"
+            android:text="出品者評価"
+            android:textColor="#000000"
+            android:textSize="24sp"
+            android:textStyle="bold"
+            android:gravity="center" />
+
+        <!-- 評価ボタン -->
+        <LinearLayout
+            android:id="@+id/evaluationButtons"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center"
+            android:layout_marginTop="32dp"
+            android:weightSum="5">
+
+            <!-- 感動ボタン -->
+            <Button
+                android:id="@+id/veryGoodButton"
+                android:layout_width="0dp"
+                android:layout_height="70dp"
+                android:layout_weight="1"
+                android:layout_marginEnd="4dp"
+                android:backgroundTint="#4CAF50"
+                android:text="感動"
+                android:textColor="#FFFFFF"
+                android:textSize="12sp" />
+
+            <!-- 良いボタン -->
+            <Button
+                android:id="@+id/goodButton"
+                android:layout_width="0dp"
+                android:layout_height="70dp"
+                android:layout_weight="1"
+                android:layout_marginStart="4dp"
+                android:layout_marginEnd="4dp"
+                android:backgroundTint="#8BC34A"
+                android:text="良い"
+                android:textColor="#FFFFFF"
+                android:textSize="12sp" />
+
+            <!-- 普通ボタン -->
+            <Button
+                android:id="@+id/normalButton"
+                android:layout_width="0dp"
+                android:layout_height="70dp"
+                android:layout_weight="1"
+                android:layout_marginStart="4dp"
+                android:layout_marginEnd="4dp"
+                android:backgroundTint="#FFC107"
+                android:text="普通"
+                android:textColor="#FFFFFF"
+                android:textSize="12sp" />
+
+            <!-- 悪いボタン -->
+            <Button
+                android:id="@+id/badButton"
+                android:layout_width="0dp"
+                android:layout_height="70dp"
+                android:layout_weight="1"
+                android:layout_marginStart="4dp"
+                android:layout_marginEnd="4dp"
+                android:backgroundTint="#FF9800"
+                android:text="悪い"
+                android:textColor="#FFFFFF"
+                android:textSize="12sp" />
+
+            <!-- 最悪ボタン -->
+            <Button
+                android:id="@+id/veryBadButton"
+                android:layout_width="0dp"
+                android:layout_height="70dp"
+                android:layout_weight="1"
+                android:layout_marginStart="4dp"
+                android:backgroundTint="#F44336"
+                android:text="最悪"
+                android:textColor="#FFFFFF"
+                android:textSize="12sp" />
+        </LinearLayout>
+
+        <!-- メッセージ入力欄 -->
+        <EditText
+            android:id="@+id/messageInput"
+            android:layout_width="match_parent"
+            android:layout_height="500dp"
+            android:hint="購入者へのメッセージ"
+            android:background="@drawable/rounded_rectangle_background"
+            android:padding="16dp"
+            android:gravity="top|start"
+            android:layout_marginTop="32dp" />
+
+        <!-- 送信ボタン -->
+        <Button
+            android:id="@+id/editButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginTop="16dp"
+            android:backgroundTint="#705B7C"
+            android:text="送信"
+            android:textColor="#FFFFFF" />
+    </LinearLayout>
+
+    <!-- 半透明背景 -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#80000000"
+        android:gravity="center">
+
+        <!-- 中央カードビュー -->
+        <androidx.cardview.widget.CardView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:cardCornerRadius="16dp"
+            app:cardElevation="8dp"
+            app:cardBackgroundColor="#FFFFFF"
+            android:padding="24dp">
+
+            <LinearLayout
+                android:layout_width="309dp"
+                android:layout_height="178dp"
+                android:gravity="center"
+                android:orientation="vertical">
+
+                <!-- 確認メッセージ -->
+                <TextView
+                    android:id="@+id/cardMessage"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="16dp"
+                    android:gravity="center"
+                    android:text="本当にこの評価を送信しますか？"
+                    android:textColor="#000000"
+                    android:textSize="16sp" />
+
+                <!-- ボタン配置 -->
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <!-- キャンセルボタン -->
+                    <Button
+                        android:id="@+id/cancelButton"
+                        android:layout_width="130dp"
+                        android:layout_height="50dp"
+                        android:layout_marginEnd="8dp"
+                        android:backgroundTint="#CCCCCC"
+                        android:text="キャンセル"
+                        android:textColor="#FFFFFF"
+                        android:textSize="16sp" />
+
+                    <!-- 確定ボタン -->
+                    <Button
+                        android:id="@+id/confirmButton"
+                        android:layout_width="130dp"
+                        android:layout_height="50dp"
+                        android:layout_marginStart="8dp"
+                        android:backgroundTint="#4CAF50"
+                        android:text="送信"
+                        android:textColor="#FFFFFF"
+                        android:textSize="16sp" />
+                </LinearLayout>
+            </LinearLayout>
+        </androidx.cardview.widget.CardView>
+    </LinearLayout>
+</FrameLayout>

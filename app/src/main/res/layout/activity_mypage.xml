@@ -7,15 +7,17 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#DFD4E0"
-    tools:context=".MainActivity">
+    tools:context=".MainActivity_egu">
 
-    <!-- ImageView -->
-    <ImageView
-        android:id="@+id/mybackbtn"
+    <!-- ImageButton (バックボタン) -->
+    <ImageButton
+        android:scaleType="centerInside"
+        android:id="@+id/imageView"
         android:layout_width="80dp"
         android:layout_height="80dp"
         android:layout_marginTop="30dp"
         android:layout_marginStart="30dp"
+        android:background="@android:color/transparent"
         app:srcCompat="@drawable/backbutton"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
@@ -28,7 +30,7 @@
         android:layout_marginTop="16dp"
         android:background="#FFFFFF"
         android:padding="8dp"
-        app:layout_constraintTop_toBottomOf="@id/mybackbtn"
+        app:layout_constraintTop_toBottomOf="@id/imageView"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent">
 
@@ -37,16 +39,16 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
-            android:text="名前を表示"
+            android:text="username"
             android:textColor="#79747E"
-            android:textSize="20dp"
+            android:textSize="20sp"
             android:textStyle="bold"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
         <!-- Star TextViews -->
         <TextView
-            android:id="@+id/mystar1"
+            android:id="@+id/textView111"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="☆"
@@ -56,44 +58,44 @@
             app:layout_constraintTop_toBottomOf="@id/textView" />
 
         <TextView
-            android:id="@+id/mystar2"
+            android:id="@+id/textView112"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="☆"
             android:textStyle="bold"
             android:textSize="20sp"
-            app:layout_constraintStart_toEndOf="@id/mystar1"
-            app:layout_constraintTop_toTopOf="@id/mystar1" />
+            app:layout_constraintStart_toEndOf="@id/textView111"
+            app:layout_constraintTop_toTopOf="@id/textView111" />
 
         <TextView
-            android:id="@+id/mystar3"
+            android:id="@+id/textView113"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="☆"
             android:textStyle="bold"
             android:textSize="20sp"
-            app:layout_constraintStart_toEndOf="@id/mystar2"
-            app:layout_constraintTop_toTopOf="@id/mystar2" />
+            app:layout_constraintStart_toEndOf="@id/textView112"
+            app:layout_constraintTop_toTopOf="@id/textView112" />
 
         <TextView
-            android:id="@+id/mystar4"
+            android:id="@+id/textView114"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="☆"
             android:textStyle="bold"
             android:textSize="20sp"
-            app:layout_constraintStart_toEndOf="@id/mystar3"
-            app:layout_constraintTop_toTopOf="@id/mystar3" />
+            app:layout_constraintStart_toEndOf="@id/textView113"
+            app:layout_constraintTop_toTopOf="@id/textView113" />
 
         <TextView
-            android:id="@+id/mystar5"
+            android:id="@+id/textView115"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="☆"
             android:textStyle="bold"
             android:textSize="20sp"
-            app:layout_constraintStart_toEndOf="@id/mystar4"
-            app:layout_constraintTop_toTopOf="@id/mystar4" />
+            app:layout_constraintStart_toEndOf="@id/textView114"
+            app:layout_constraintTop_toTopOf="@id/textView114" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -103,7 +105,7 @@
         android:layout_width="match_parent"
         android:layout_height="90dp"
         android:padding="16dp"
-        app:layout_constraintTop_toBottomOf="@id/constraintLayout"> <!-- 変更ここ -->
+        app:layout_constraintTop_toBottomOf="@id/constraintLayout">
 
         <TextView
             android:id="@+id/textView7"
@@ -113,7 +115,7 @@
             android:layout_marginEnd="96dp"
             android:text="￥"
             android:textColor="#79747E"
-            android:textSize="22dp"
+            android:textSize="22sp"
             android:textStyle="bold"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
@@ -124,7 +126,7 @@
             android:layout_height="wrap_content"
             android:text="2000"
             android:textColor="#79747E"
-            android:textSize="22dp"
+            android:textSize="22sp"
             android:textStyle="bold"
             app:layout_constraintStart_toEndOf="@id/textView7"
             app:layout_constraintTop_toTopOf="@id/textView7" />
@@ -137,7 +139,7 @@
             android:layout_marginTop="12dp"
             android:text="売上金"
             android:textColor="#79747E"
-            android:textSize="20dp"
+            android:textSize="20sp"
             android:textStyle="bold"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
@@ -146,9 +148,7 @@
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        tools:layout_editor_absoluteX="1dp"
-        tools:layout_editor_absoluteY="0dp">
+        android:layout_height="match_parent">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -159,80 +159,80 @@
             app:layout_constraintTop_toTopOf="parent">
 
             <Button
-                android:id="@+id/myexlistlistbtn"
+                android:id="@+id/salestransferbtn"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:background="@android:color/transparent"
                 android:gravity="start"
                 android:text="出品一覧"
                 android:textColor="#79747E"
-                android:textSize="18dp"
+                android:textSize="18sp"
                 android:textStyle="bold" />
 
             <Button
-                android:id="@+id/mybuylistlistbtn"
+                android:id="@+id/purchasedbtn2"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@android:color/transparent"
                 android:gravity="start"
                 android:text="購入一覧"
                 android:textColor="#79747E"
-                android:textSize="18dp"
+                android:textSize="18sp"
                 android:textStyle="bold" />
 
             <Button
-                android:id="@+id/myfavolistbtn"
+                android:id="@+id/favoritebtn2"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@android:color/transparent"
                 android:gravity="start"
                 android:text="お気に入り"
                 android:textColor="#79747E"
-                android:textSize="18dp"
+                android:textSize="18sp"
                 android:textStyle="bold" />
 
             <Button
-                android:id="@+id/mysaleslistbtn"
+                android:id="@+id/SalesTransfer"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@android:color/transparent"
                 android:gravity="start"
                 android:text="売上金振込"
                 android:textColor="#79747E"
-                android:textSize="18dp"
+                android:textSize="18sp"
                 android:textStyle="bold" />
 
             <Button
-                android:id="@+id/mycuslistbtn"
+                android:id="@+id/faqbtn"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@android:color/transparent"
                 android:gravity="start"
                 android:text="カスタマーサービス"
                 android:textColor="#79747E"
-                android:textSize="18dp"
+                android:textSize="18sp"
                 android:textStyle="bold" />
 
             <Button
-                android:id="@+id/myoutlistbtn"
+                android:id="@+id/logoutbtn"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@android:color/transparent"
                 android:gravity="start"
                 android:text="ログアウト"
                 android:textColor="#79747E"
-                android:textSize="18dp"
+                android:textSize="18sp"
                 android:textStyle="bold" />
 
             <Button
-                android:id="@+id/mysettinglistbtn"
+                android:id="@+id/settingbtn"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@android:color/transparent"
                 android:gravity="start"
                 android:text="設定"
                 android:textColor="#79747E"
-                android:textSize="18dp"
+                android:textSize="18sp"
                 android:textStyle="bold" />
         </LinearLayout>
     </androidx.constraintlayout.widget.ConstraintLayout>
@@ -245,54 +245,54 @@
         android:background="@drawable/chatunderbar"
         app:layout_constraintBottom_toBottomOf="parent">
 
-        <ImageView
-            android:id="@+id/mypage_homebtn"
+        <ImageButton
+            android:scaleType="centerInside"
+            android:id="@+id/homebtn"
             android:layout_width="0dp"
             android:layout_height="80dp"
             android:layout_margin="8dp"
             android:layout_weight="1"
-            android:clickable="true"
-            android:focusable="true"
+            android:background="@android:color/transparent"
             app:srcCompat="@drawable/home_button"/>
 
-        <ImageView
-            android:id="@+id/mypage_searchbtn"
+        <ImageButton
+            android:id="@+id/exhibitedbtn"
             android:layout_width="0dp"
             android:layout_height="80dp"
             android:layout_weight="1"
             android:layout_margin="8dp"
-            android:clickable="true"
-            android:focusable="true"
+            android:background="@android:color/transparent"
+            android:scaleType="centerInside"
             app:srcCompat="@drawable/search_button" />
 
-        <ImageView
-            android:id="@+id/mypage_exhibitbtn"
+        <ImageButton
+            android:scaleType="centerInside"
+            android:id="@+id/purchasedbtn"
             android:layout_width="0dp"
             android:layout_height="80dp"
             android:layout_weight="1"
             android:layout_margin="8dp"
-            android:clickable="true"
-            android:focusable="true"
+            android:background="@android:color/transparent"
             app:srcCompat="@drawable/exhibit_button" />
 
-        <ImageView
-            android:id="@+id/mypage_favobtn"
+        <ImageButton
+            android:scaleType="centerInside"
+            android:id="@+id/favoritebtn"
             android:layout_width="0dp"
             android:layout_height="80dp"
             android:layout_weight="1"
             android:layout_margin="8dp"
-            android:clickable="true"
-            android:focusable="true"
+            android:background="@android:color/transparent"
             app:srcCompat="@drawable/favorite_button" />
 
-        <ImageView
-            android:id="@+id/mypage_mypagebtn"
+        <ImageButton
+            android:scaleType="centerInside"
+            android:id="@+id/profilebtn"
             android:layout_width="0dp"
             android:layout_height="80dp"
             android:layout_weight="1"
             android:layout_margin="8dp"
-            android:clickable="true"
-            android:focusable="true"
+            android:background="@android:color/transparent"
             app:srcCompat="@drawable/mypage_button" />
 
     </LinearLayout>
