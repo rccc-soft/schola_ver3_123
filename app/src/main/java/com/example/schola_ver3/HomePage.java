@@ -157,7 +157,7 @@ public class HomePage extends AppCompatActivity implements View.OnClickListener 
         if (v.getId() == R.id.editTextText) {
             intent = new Intent(getApplication(), ProductSearch.class);
         } else if (v.getId() == R.id.home_homebtn) {
-            intent = new Intent(getApplication(), HomePage.class); // 自分自身を再起動するのは通常必要ありません
+            intent = new Intent(getApplication(), HomePage.class);
         } else if (v.getId() == R.id.home_searchbtn) {
             intent = new Intent(getApplication(), ProductSearch.class);
         } else if (v.getId() == R.id.home_exhibitbtn) {

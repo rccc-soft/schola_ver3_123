@@ -8,6 +8,7 @@ import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
 import android.widget.ImageView;
@@ -19,15 +20,20 @@ import androidx.appcompat.app.AppCompatActivity;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-public class SearchResult extends AppCompatActivity {
+public class SearchResult extends AppCompatActivity implements View.OnClickListener{
     private ListView resultsListView;
     private ProductDatabaseHelper dbHelper;
+
+    private EditText editTextText;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_search_result);
+
+        editTextText = findViewById(R.id.editTextText);
+        editTextText.setOnClickListener(this);
 
         dbHelper = new ProductDatabaseHelper(this);
         resultsListView = findViewById(R.id.resultsListView);
@@ -101,6 +107,18 @@ public class SearchResult extends AppCompatActivity {
             });
 
             resultsListView.setAdapter(adapter);
+        }
+    }
+
+    @Override
+    public void onClick(View v) {
+        Intent intent = null; // intentを初期化
+        if (v.getId() == R.id.editTextText) {
+            intent = new Intent(getApplication(), ProductSearch.class);
+        }
+        // intentがnullでない場合にstartActivityを呼び出す
+        if (intent != null) {
+            startActivity(intent);
         }
     }
 
