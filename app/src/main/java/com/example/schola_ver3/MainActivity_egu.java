@@ -57,8 +57,10 @@ public class MainActivity_egu extends AppCompatActivity {
             buttonReviewBuyList.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                   // Intent intent = new Intent(MainActivity_egu.this, EvaluationBuy.class);
-                   // startActivity(intent);
+                    Intent intent = new Intent(MainActivity_egu.this, EvaluationBuy.class);
+                    intent.putExtra("buyer_member_id", buyer_member_id);
+                    intent.putExtra("seller_member_id", seller_member_id);
+                    startActivity(intent);
                 }
             });
         }

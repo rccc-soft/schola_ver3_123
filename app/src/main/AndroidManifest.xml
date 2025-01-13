@@ -30,6 +30,15 @@
                 android:value=".MainActivity_egu" />
         </activity>
         <activity
+            android:name=".EvaluationBuySend"
+            android:exported="false" />
+        <activity
+            android:name=".EvaluationBuySuccess"
+            android:exported="false" />
+        <activity
+            android:name=".EvaluationBuy"
+            android:exported="false" />
+        <activity
             android:name=".EvaluationSell"
             android:exported="false" />
         <activity
