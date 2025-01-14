@@ -61,8 +61,13 @@
         <activity android:name=".ExhibitEdit" />
         <activity android:name=".ProductDetail" />
         <activity android:name=".ExhibitCancel" />
+<<<<<<< HEAD
         <activity android:name=".Buy" />
         <activity android:name=".BuyCheck" />
+=======
+        <activity android:name=".Setting" />
+        <activity android:name=".Rule" />
+>>>>>>> 10e25acdc13704b5855a01d935df1c31fd95b670
     </application>
 
 </manifest>
