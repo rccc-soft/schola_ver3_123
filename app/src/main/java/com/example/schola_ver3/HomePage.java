@@ -138,15 +138,35 @@ public class HomePage extends AppCompatActivity implements View.OnClickListener 
 
     private void navigateToProductDetail(HashMap<String, Object> product) {
         Intent intent = new Intent(this, ProductDetail.class);
+        String productId = (String) product.get("商品ID");
 
-        // 商品情報をIntentに追加
-        for (String key : product.keySet()) {
-            if (product.get(key) instanceof String) {
-                intent.putExtra(key, (String) product.get(key));
-            } else if (product.get(key) instanceof byte[]) {
-                intent.putExtra(key, (byte[]) product.get(key));
+        SQLiteDatabase db = dbHelper.getReadableDatabase();
+        String[] projection = {
+                "商品ID", "商品名", "商品説明", "商品画像", "カテゴリ", "金額", "配送方法", "出品日時", "地域", "出品者ID"
+        };
+        String selection = "商品ID = ?";
+        String[] selectionArgs = {productId};
+
+        Cursor cursor = db.query(
+                "商品テーブル",
+                projection,
+                selection,
+                selectionArgs,
+                null,
+                null,
+                null
+        );
+
+        if (cursor.moveToFirst()) {
+            for (String column : projection) {
+                if (column.equals("商品画像")) {
+                    intent.putExtra(column, cursor.getBlob(cursor.getColumnIndex(column)));
+                } else {
+                    intent.putExtra(column, cursor.getString(cursor.getColumnIndex(column)));
+                }
             }
         }
+        cursor.close();
 
         startActivity(intent);
     }
