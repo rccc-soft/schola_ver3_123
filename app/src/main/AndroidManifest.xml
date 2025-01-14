@@ -60,6 +60,8 @@
         <activity android:name=".ExhibitEdit" />
         <activity android:name=".ProductDetail" />
         <activity android:name=".ExhibitCancel" />
+        <activity android:name=".Setting" />
+        <activity android:name=".Rule" />
     </application>
 
 </manifest>
