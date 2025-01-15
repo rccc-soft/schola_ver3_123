@@ -16,7 +16,7 @@ import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
 import com.example.schola_ver3.EvaluationView;
-import com.example.schola_ver3.R;
+//import com.example.schola_ver3.R;
 
 import java.util.List;
 
