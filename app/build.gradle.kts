@@ -3,11 +3,12 @@ plugins {
 }
 
 android {
-    namespace = "com.example.korekore"
+
+    namespace = "com.example.schola_ver3"
     compileSdk = 34
 
     defaultConfig {
-        applicationId = "com.example.korekore"
+        applicationId = rootProject.extra["defaultApplicationId"] as String
         minSdk = 26
         targetSdk = 34
         versionCode = 1
@@ -26,10 +27,14 @@ android {
         }
     }
     packagingOptions {
-        exclude("META-INF/NOTICE.md")
-        exclude("META-INF/LICENSE.md")
-        exclude("META-INF/INDEX.LIST")
-        exclude("META-INF/DEPENDENCIES")
+        resources {
+            excludes += setOf(
+                "META-INF/NOTICE.md",
+                "META-INF/LICENSE.md",
+                "META-INF/INDEX.LIST",
+                "META-INF/DEPENDENCIES"
+            )
+        }
     }
 }
 

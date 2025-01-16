@@ -15,8 +15,10 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
-import com.example.schola_ver3.EvaluationView;
-import com.example.schola_ver3.R;
+//import com.example.schola_ver3.EvaluationView;
+//import com.example.schola_ver3.R;
+
+//import com.example.korekore.R;
 
 import java.util.List;
 
@@ -164,39 +166,37 @@ public class MyPage extends AppCompatActivity implements View.OnClickListener{
         if (id == R.id.imageView){
             Intent intent = new Intent(this, MainActivity_egu.class);
             startActivity(intent);
-        }
-
-       /* if (id == R.id.settingbtn) {
+        } else if (id == R.id.settingbtn) {
             Intent intent = new Intent(this, Setting.class);
             startActivity(intent);
         } else if (id == R.id.logoutbtn) {
-            Intent intent = new Intent(this, Logout.class);
-            startActivity(intent);
+//            Intent intent = new Intent(this, Logout.class);
+//            startActivity(intent);
         } else if (id == R.id.faqbtn) {
-            Intent intent = new Intent(this, FAQRequest.class);
-            startActivity(intent);
+//            Intent intent = new Intent(this, FAQRequest.class);
+//            startActivity(intent);
         } else if (id == R.id.salestransferbtn || id == R.id.SalesTransfer) {
-            Intent intent = new Intent(this, SalesTransfer.class);
+            Intent intent = new Intent(this, ExhibitList.class);
             startActivity(intent);
         } else if (id == R.id.profilebtn) {
-            Intent intent = new Intent(this, ProfileView.class);
-            startActivity(intent);
+//            Intent intent = new Intent(this, .class);
+//            startActivity(intent);
         } else if (id == R.id.favoritebtn || id == R.id.favoritebtn2) {
-            Intent intent = new Intent(this, FavoriteList.class);
-            startActivity(intent);
+//            Intent intent = new Intent(this, .class);
+//            startActivity(intent);
         } else if (id == R.id.purchasedbtn || id == R.id.purchasedbtn2) {
-            Intent intent = new Intent(this, PurchasedList.class);
+            Intent intent = new Intent(this, Exhibit.class);
             startActivity(intent);
         } else if (id == R.id.homebtn) {
-            Intent intent = new Intent(this, HomeActivity.class); // 適切なクラスに変更
+            Intent intent = new Intent(this, HomePage.class); // 適切なクラスに変更
             startActivity(intent);
         } else if (id == R.id.exhibitedbtn) {
-            Intent intent = new Intent(this, ExhibitList.class);
+            Intent intent = new Intent(this, ProductSearch.class);
             startActivity(intent);
         } else if (id == R.id.imageView) {
             // バックボタンの動作を定義
             finish(); // 例: アクティビティを終了
-        }*/
+        }
     }
 
     /**

@@ -11,6 +11,8 @@ import android.widget.RadioButton;
 import android.widget.TextView;
 import androidx.appcompat.app.AppCompatActivity;
 
+//import com.example.schola_ver3;
+
 public class Buy extends AppCompatActivity {
     private RadioButton deliverySelectButton;
     private RadioButton handDeliverySelectButton;
@@ -51,30 +53,30 @@ public class Buy extends AppCompatActivity {
         SharedPreferences prefs = getSharedPreferences("ProductPrefs", MODE_PRIVATE);
         String productId = prefs.getString("productId", "");
 
-        SQLiteDatabase db = dbHelper.getReadableDatabase();
-        String[] projection = {ProductDatabaseHelper.COLUMN_DELIVERY};
-        String selection = ProductDatabaseHelper.COLUMN_ID + " = ?";
-        String[] selectionArgs = {productId};
+//        SQLiteDatabase db = dbHelper.getReadableDatabase();
+//        String[] projection = {ProductDatabaseHelper.COLUMN_DELIVERY};
+//        String selection = ProductDatabaseHelper.COLUMN_ID + " = ?";
+//        String[] selectionArgs = {productId};
 
-        Cursor cursor = db.query(
-                ProductDatabaseHelper.TABLE_NAME,
-                projection,
-                selection,
-                selectionArgs,
-                null,
-                null,
-                null
-        );
+//        Cursor cursor = db.query(
+//                ProductDatabaseHelper.TABLE_NAME,
+//                projection,
+//                selection,
+//                selectionArgs,
+//                null,
+//                null,
+//                null
+//        );
 
-        if (cursor.moveToFirst()) {
-            String deliveryMethod = cursor.getString(cursor.getColumnIndexOrThrow(ProductDatabaseHelper.COLUMN_DELIVERY));
-            if ("配送".equals(deliveryMethod)) {
-                deliverySelectButton.setChecked(true);
-            } else if ("手渡し".equals(deliveryMethod)) {
-                handDeliverySelectButton.setChecked(true);
-            }
-        }
-        cursor.close();
+//        if (cursor.moveToFirst()) {
+//            String deliveryMethod = cursor.getString(cursor.getColumnIndexOrThrow(ProductDatabaseHelper.COLUMN_DELIVERY));
+//            if ("配送".equals(deliveryMethod)) {
+//                deliverySelectButton.setChecked(true);
+//            } else if ("手渡し".equals(deliveryMethod)) {
+//                handDeliverySelectButton.setChecked(true);
+//            }
+//        }
+//        cursor.close();
     }
 
     private void setAddress() {
