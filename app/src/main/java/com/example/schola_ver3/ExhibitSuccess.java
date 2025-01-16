@@ -7,6 +7,8 @@ import android.widget.Button;
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
 
+//import com.example.korekore.R;
+
 public class ExhibitSuccess extends AppCompatActivity implements View.OnClickListener {
     private Button decisionbtn;
 

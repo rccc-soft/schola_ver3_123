@@ -12,6 +12,7 @@ import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
@@ -23,7 +24,6 @@ import java.util.HashMap;
 public class SearchResult extends AppCompatActivity implements View.OnClickListener{
     private ListView resultsListView;
     private ProductDatabaseHelper dbHelper;
-
     private EditText editTextText;
 
     @Override
@@ -73,6 +73,10 @@ public class SearchResult extends AppCompatActivity implements View.OnClickListe
             for (String column : projection) {
                 if (column.equals("商品画像")) {
                     item.put(column, cursor.getBlob(cursor.getColumnIndex(column)));
+                } else if (column.equals("金額")) {
+                    String price = cursor.getString(cursor.getColumnIndex(column));
+                    item.put(column, price); // 元の価格を保存
+                    item.put("表示用金額", "￥" + price); // 表示用に￥を追加
                 } else {
                     item.put(column, cursor.getString(cursor.getColumnIndex(column)));
                 }
@@ -88,7 +92,7 @@ public class SearchResult extends AppCompatActivity implements View.OnClickListe
                     this,
                     results,
                     R.layout.search_result_item,
-                    new String[]{"商品名", "金額", "商品画像"},
+                    new String[]{"商品名", "表示用金額", "商品画像"},
                     new int[]{R.id.productNameTextView, R.id.productPriceTextView, R.id.productImageView}
             );
 
@@ -112,11 +116,10 @@ public class SearchResult extends AppCompatActivity implements View.OnClickListe
 
     @Override
     public void onClick(View v) {
-        Intent intent = null; // intentを初期化
+        Intent intent = null;
         if (v.getId() == R.id.editTextText) {
             intent = new Intent(getApplication(), ProductSearch.class);
         }
-        // intentがnullでない場合にstartActivityを呼び出す
         if (intent != null) {
             startActivity(intent);
         }
@@ -125,6 +128,9 @@ public class SearchResult extends AppCompatActivity implements View.OnClickListe
     private void navigateToProductDetail(HashMap<String, Object> item) {
         Intent detailIntent = new Intent(SearchResult.this, ProductDetail.class);
         for (String key : item.keySet()) {
+            if (key.equals("表示用金額")) {
+                continue; // 表示用金額はスキップ
+            }
             if (item.get(key) instanceof String) {
                 detailIntent.putExtra(key, (String) item.get(key));
             } else if (item.get(key) instanceof byte[]) {

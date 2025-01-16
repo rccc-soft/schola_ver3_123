@@ -1,5 +1,7 @@
 package com.example.schola_ver3;
 
+import static android.app.DownloadManager.COLUMN_ID;
+
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
@@ -15,6 +17,8 @@ import android.widget.TextView;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
+
+//import com.example.korekore.R;
 
 public class ProductDetail extends AppCompatActivity implements View.OnClickListener {
 
@@ -43,7 +47,7 @@ public class ProductDetail extends AppCompatActivity implements View.OnClickList
         getage();
         SharedPreferences prefs = getSharedPreferences("ProductPrefs", MODE_PRIVATE);
         SharedPreferences.Editor editor = prefs.edit();
-        editor.putString("productId", productId);
+        editor.putString("productId", COLUMN_ID);
         editor.apply();
 
         initializeViews();

@@ -8,13 +8,14 @@ import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.AppCompatImageView;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -30,6 +31,7 @@ public class HomePage extends AppCompatActivity implements View.OnClickListener 
     private ImageView home_exhibitbtn;
     private ImageView home_favobtn;
     private ImageView home_mypagebtn;
+    private ImageButton noticeButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,23 +57,25 @@ public class HomePage extends AppCompatActivity implements View.OnClickListener 
         home_mypagebtn = findViewById(R.id.home_mypagebtn);
         home_mypagebtn.setOnClickListener(this);
 
+        noticeButton = findViewById(R.id.noticeButton);
+        noticeButton.setOnClickListener(this);
+
         dbHelper = new ProductDatabaseHelper(this);
 
         displayRandomProducts();
     }
 
     private void displayRandomProducts() {
-        LinearLayout layout1 = findViewById(R.id.productRow1); // 1行目のレイアウト
-        LinearLayout layout2 = findViewById(R.id.productRow2); // 2行目のレイアウト
-        LinearLayout layout3 = findViewById(R.id.productRow3); // 3行目のレイアウト
-        LinearLayout layout4 = findViewById(R.id.productRow4); // 4行目のレイアウト
-        LinearLayout layout5 = findViewById(R.id.productRow5); // 5行目のレイアウト
+        LinearLayout layout1 = findViewById(R.id.productRow1);
+        LinearLayout layout2 = findViewById(R.id.productRow2);
+        LinearLayout layout3 = findViewById(R.id.productRow3);
+        LinearLayout layout4 = findViewById(R.id.productRow4);
+        LinearLayout layout5 = findViewById(R.id.productRow5);
 
         SQLiteDatabase db = dbHelper.getReadableDatabase();
 
         String[] projection = {"商品ID", "商品名", "商品画像", "金額"};
 
-        // データベースからすべての商品を取得
         Cursor cursor = db.query("商品テーブル", projection, null, null, null, null, null);
 
         ArrayList<HashMap<String, Object>> products = new ArrayList<>();
@@ -87,16 +91,14 @@ public class HomePage extends AppCompatActivity implements View.OnClickListener 
 
         cursor.close();
 
-        // ランダムに10個までの商品を選択
         Random random = new Random();
-        int productCount = Math.min(products.size(), 10); // 10個以上あれば10個、なければその数だけ
+        int productCount = Math.min(products.size(), 10);
         ArrayList<HashMap<String, Object>> selectedProducts = new ArrayList<>();
 
         while (selectedProducts.size() < productCount) {
             int randomIndex = random.nextInt(products.size());
             HashMap<String, Object> randomProduct = products.get(randomIndex);
 
-            // 重複を避けるためにチェック
             if (!selectedProducts.contains(randomProduct)) {
                 selectedProducts.add(randomProduct);
             }
@@ -109,29 +111,34 @@ public class HomePage extends AppCompatActivity implements View.OnClickListener 
             ImageView imageView = productView.findViewById(R.id.imageView1);
             TextView nameTextView = productView.findViewById(R.id.textView1);
             TextView priceTextView = productView.findViewById(R.id.textView5);
+            TextView starTextView = productView.findViewById(R.id.textView9);
 
             nameTextView.setText((String) product.get("商品名"));
-            priceTextView.setText((String) product.get("金額"));
+            priceTextView.setText("￥" + (String) product.get("金額"));
 
             byte[] imageData = (byte[]) product.get("商品画像");
             Bitmap bitmap = BitmapFactory.decodeByteArray(imageData, 0, imageData.length);
             imageView.setImageBitmap(bitmap);
 
-            // 商品がクリックされたときの処理
             String productId = (String) product.get("商品ID");
             productView.setOnClickListener(v -> navigateToProductDetail(product));
 
-            // 行ごとに異なるレイアウトに追加（2列）
+            starTextView.setOnClickListener(v -> {
+                // お気に入りボタンが押されたときの処理
+                Toast.makeText(HomePage.this, "お気に入りに追加しました", Toast.LENGTH_SHORT).show();
+                // ここにお気に入り追加のロジックを実装
+            });
+
             if (i == 0 || i == 1) {
-                layout1.addView(productView); //(1行目）
+                layout1.addView(productView);
             } else if (i == 2 || i == 3){
-                layout2.addView(productView); //（2行目）
+                layout2.addView(productView);
             } else if (i == 4 || i == 5){
-                layout3.addView(productView); // （3行目）
+                layout3.addView(productView);
             } else if (i == 6 || i == 7){
-                layout4.addView(productView); //（4行目）
+                layout4.addView(productView);
             } else if (i == 8 || i == 9){
-                layout5.addView(productView); // （5行目）
+                layout5.addView(productView);
             }
         }
     }
@@ -173,7 +180,7 @@ public class HomePage extends AppCompatActivity implements View.OnClickListener 
 
     @Override
     public void onClick(View v) {
-        Intent intent = null; // intentを初期化
+        Intent intent = null;
         if (v.getId() == R.id.editTextText) {
             intent = new Intent(getApplication(), ProductSearch.class);
         } else if (v.getId() == R.id.home_homebtn) {
@@ -183,13 +190,14 @@ public class HomePage extends AppCompatActivity implements View.OnClickListener 
         } else if (v.getId() == R.id.home_exhibitbtn) {
             intent = new Intent(getApplication(), Exhibit.class);
         } else if (v.getId() == R.id.home_favobtn) {
-            // intentは未設定なので、必要なクラスを設定してください
-//          intent = new Intent(getApplication(), Favorite.class); // 例：お気に入り画面への遷移
+            // お気に入り画面への遷移（未実装）
         } else if (v.getId() == R.id.home_mypagebtn) {
             intent = new Intent(getApplication(), MyPage.class);
+        } else if (v.getId() == R.id.noticeButton) {
+            // お知らせボタンがクリックされたときの処理をここに追加
+            Toast.makeText(HomePage.this, "お知らせボタンがクリックされました", Toast.LENGTH_SHORT).show();
         }
 
-        // intentがnullでない場合にstartActivityを呼び出す
         if (intent != null) {
             startActivity(intent);
         }
