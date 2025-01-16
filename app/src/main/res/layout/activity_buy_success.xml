@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/mainLayout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="16dp"
+    tools:context=".buySuccess">
+
+
+    <!-- 売上情報表示用のTextView -->
+    <TextView
+        android:id="@+id/tvSalesInfo"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="売上情報がここに表示されます"
+        android:textSize="16sp"
+        android:padding="8dp"
+        android:background="#EEEEEE"
+        android:layout_marginBottom="16dp" />
+
+    <!-- 商品情報表示用のTextView -->
+    <TextView
+        android:id="@+id/tvProductInfo"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="商品情報がここに表示されます"
+        android:textSize="16sp"
+        android:padding="8dp"
+        android:background="#EEEEEE"
+        android:layout_marginBottom="16dp" />
+
+    <!-- 売上処理ボタン -->
+    <Button
+        android:id="@+id/btnProcessSale"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="売上を処理する" />
+
+</LinearLayout>
