@@ -1,6 +1,7 @@
 package com.example.schola_ver3;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Bitmap;
@@ -21,7 +22,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-public class SearchResult extends AppCompatActivity implements View.OnClickListener{
+public class SearchResult extends AppCompatActivity implements View.OnClickListener {
     private ListView resultsListView;
     private ProductDatabaseHelper dbHelper;
     private EditText editTextText;
@@ -49,13 +50,23 @@ public class SearchResult extends AppCompatActivity implements View.OnClickListe
         });
     }
 
+    private String getCurrentUserId() {
+        SharedPreferences sharedPreferences = getSharedPreferences("UserPrefs", MODE_PRIVATE);
+        return sharedPreferences.getString("user_id", "");
+    }
+
     private void displaySearchResults(String query) {
         SQLiteDatabase db = dbHelper.getReadableDatabase();
         String[] projection = {
                 "商品ID", "商品名", "商品説明", "商品画像", "カテゴリ", "金額", "配送方法", "出品日時", "地域", "出品者ID"
         };
-        String selection = "商品名 LIKE ?";
-        String[] selectionArgs = {"%" + query + "%"};
+
+        // 現在のユーザーIDを取得
+        String currentUserId = getCurrentUserId();
+
+        // 出品者IDが現在のユーザーIDと一致しない条件を追加
+        String selection = "商品名 LIKE ? AND 出品者ID != ?";
+        String[] selectionArgs = {"%" + query + "%", currentUserId};
 
         Cursor cursor = db.query(
                 "商品テーブル",
@@ -64,7 +75,8 @@ public class SearchResult extends AppCompatActivity implements View.OnClickListe
                 selectionArgs,
                 null,
                 null,
-                null
+                null,
+                "10" // ここで最大10件を指定
         );
 
         ArrayList<HashMap<String, Object>> results = new ArrayList<>();

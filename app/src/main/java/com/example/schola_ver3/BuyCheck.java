@@ -7,8 +7,6 @@ import android.widget.Button;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-//import com.example.korekore.R;
-
 public class BuyCheck extends AppCompatActivity {
 
     private Button buyNoButton;
@@ -29,9 +27,7 @@ public class BuyCheck extends AppCompatActivity {
         buyNoButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // Buy.javaに戻る
-                Intent intent = new Intent(BuyCheck.this, Buy.class);
-                startActivity(intent);
+                setResult(RESULT_CANCELED);
                 finish();
             }
         });
@@ -39,15 +35,9 @@ public class BuyCheck extends AppCompatActivity {
         buyYesButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-//                if ("クレジットカード".equals(paymentMethod)) {
-//                    // CreditBuy.javaへ移動
-//                    Intent intent = new Intent(BuyCheck.this, CreditBuy.class);
-//                    startActivity(intent);
-//                } else if ("電子マネー".equals(paymentMethod)) {
-//                    // ElectronicMoneySelect.javaへ移動
-//                    Intent intent = new Intent(BuyCheck.this, ElectronicMoneySelect.class);
-//                    startActivity(intent);
-//                }
+                Intent resultIntent = new Intent();
+                resultIntent.putExtra("paymentMethod", paymentMethod);
+                setResult(RESULT_OK, resultIntent);
                 finish();
             }
         });

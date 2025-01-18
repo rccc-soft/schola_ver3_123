@@ -9,7 +9,7 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-//import com.example.korekore.R;
+//import com.example. ;
 
 public class ProductSearch extends AppCompatActivity implements View.OnClickListener {
     private Button searchbtn;

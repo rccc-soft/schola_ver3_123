@@ -17,7 +17,6 @@ import android.widget.Toast;
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
 
-//import com.example.korekore.R;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -53,6 +52,7 @@ public class ExhibitList extends AppCompatActivity implements View.OnClickListen
         exlist_mypagebtn = findViewById(R.id.exlist_mypagebtn);
         exlist_mypagebtn.setOnClickListener(this);
 
+
         dbHelper = new ProductDatabaseHelper(this);
 
         displayUserProducts();
@@ -67,6 +67,7 @@ public class ExhibitList extends AppCompatActivity implements View.OnClickListen
     private void displayUserProducts() {
         SQLiteDatabase db = dbHelper.getReadableDatabase();
         String userId = getCurrentUserId();
+
 
         // 出品者IDが一致する商品の取得
         Cursor cursor = db.rawQuery("SELECT * FROM 商品テーブル WHERE 出品者ID = ? ORDER BY 出品日時 ASC", new String[]{userId});
@@ -178,7 +179,8 @@ public class ExhibitList extends AppCompatActivity implements View.OnClickListen
     private String getCurrentUserId() {
         // 現在のユーザーIDを取得するロジックを実装
         SharedPreferences sharedPreferences = getSharedPreferences("UserPrefs", MODE_PRIVATE);
-        String userId = sharedPreferences.getString("userId", "");
-        return "userId";
+        String userId = sharedPreferences.getString("user_id", "");
+//        String userId = "user_id";
+        return userId;
     }
 }

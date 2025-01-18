@@ -1,6 +1,9 @@
 package com.example.schola_ver3;
 
+import static com.example.schola_ver3.DatabaseHelper.TABLE_MEMBERS;
+
 import android.content.Context;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
@@ -42,6 +45,12 @@ public class ProductDatabaseHelper extends SQLiteOpenHelper {
 
     public ProductDatabaseHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
+    }
+
+    public Cursor getProductInfo(String productId) {
+        SQLiteDatabase db = this.getReadableDatabase();
+        String query = "SELECT * FROM " + TABLE_NAME + " WHERE " + COLUMN_ID + " = ?";
+        return db.rawQuery(query, new String[]{productId});
     }
 
     @Override

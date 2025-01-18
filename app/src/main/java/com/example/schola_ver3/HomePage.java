@@ -1,6 +1,7 @@
 package com.example.schola_ver3;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Bitmap;
@@ -74,19 +75,33 @@ public class HomePage extends AppCompatActivity implements View.OnClickListener 
 
         SQLiteDatabase db = dbHelper.getReadableDatabase();
 
-        String[] projection = {"商品ID", "商品名", "商品画像", "金額"};
+        // 自身のユーザIDを取得
+        SharedPreferences sharedPreferences = getSharedPreferences("UserPrefs", MODE_PRIVATE);
+        String userId = sharedPreferences.getString("user_id", "");
 
+        // 必要なカラムを指定してクエリを実行
+        String[] projection = {"商品ID", "商品名", "商品画像", "金額", "出品者ID"};
         Cursor cursor = db.query("商品テーブル", projection, null, null, null, null, null);
 
         ArrayList<HashMap<String, Object>> products = new ArrayList<>();
 
         while (cursor.moveToNext()) {
-            HashMap<String, Object> product = new HashMap<>();
-            product.put("商品ID", cursor.getString(cursor.getColumnIndex("商品ID")));
-            product.put("商品名", cursor.getString(cursor.getColumnIndex("商品名")));
-            product.put("金額", cursor.getString(cursor.getColumnIndex("金額")));
-            product.put("商品画像", cursor.getBlob(cursor.getColumnIndex("商品画像")));
-            products.add(product);
+            // 出品者IDの取得
+            int sellerIdIndex = cursor.getColumnIndex("出品者ID");
+            if (sellerIdIndex == -1) {
+                throw new IllegalStateException("Column '出品者ID' does not exist in the table.");
+            }
+            String sellerId = cursor.getString(sellerIdIndex);
+
+            // 自身のユーザIDと一致する場合はスキップ
+            if (!sellerId.equals(getCurrentUserId())) {
+                HashMap<String, Object> product = new HashMap<>();
+                product.put("商品ID", cursor.getString(cursor.getColumnIndex("商品ID")));
+                product.put("商品名", cursor.getString(cursor.getColumnIndex("商品名")));
+                product.put("金額", cursor.getString(cursor.getColumnIndex("金額")));
+                product.put("商品画像", cursor.getBlob(cursor.getColumnIndex("商品画像")));
+                products.add(product);
+            }
         }
 
         cursor.close();
@@ -111,7 +126,6 @@ public class HomePage extends AppCompatActivity implements View.OnClickListener 
             ImageView imageView = productView.findViewById(R.id.imageView1);
             TextView nameTextView = productView.findViewById(R.id.textView1);
             TextView priceTextView = productView.findViewById(R.id.textView5);
-            TextView starTextView = productView.findViewById(R.id.textView9);
 
             nameTextView.setText((String) product.get("商品名"));
             priceTextView.setText("￥" + (String) product.get("金額"));
@@ -123,21 +137,15 @@ public class HomePage extends AppCompatActivity implements View.OnClickListener 
             String productId = (String) product.get("商品ID");
             productView.setOnClickListener(v -> navigateToProductDetail(product));
 
-            starTextView.setOnClickListener(v -> {
-                // お気に入りボタンが押されたときの処理
-                Toast.makeText(HomePage.this, "お気に入りに追加しました", Toast.LENGTH_SHORT).show();
-                // ここにお気に入り追加のロジックを実装
-            });
-
             if (i == 0 || i == 1) {
                 layout1.addView(productView);
-            } else if (i == 2 || i == 3){
+            } else if (i == 2 || i == 3) {
                 layout2.addView(productView);
-            } else if (i == 4 || i == 5){
+            } else if (i == 4 || i == 5) {
                 layout3.addView(productView);
-            } else if (i == 6 || i == 7){
+            } else if (i == 6 || i == 7) {
                 layout4.addView(productView);
-            } else if (i == 8 || i == 9){
+            } else if (i == 8 || i == 9) {
                 layout5.addView(productView);
             }
         }
@@ -201,5 +209,12 @@ public class HomePage extends AppCompatActivity implements View.OnClickListener 
         if (intent != null) {
             startActivity(intent);
         }
+    }
+
+    private String getCurrentUserId() {
+        // 現在のユーザーIDを取得するロジックを実装
+        SharedPreferences sharedPreferences = getSharedPreferences("UserPrefs", MODE_PRIVATE);
+        String userId = sharedPreferences.getString("user_id", "");
+        return userId;
     }
 }

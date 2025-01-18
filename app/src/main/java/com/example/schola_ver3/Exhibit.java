@@ -25,7 +25,6 @@ import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AppCompatActivity;
 
-//import com.example.korekore.R;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -246,7 +245,7 @@ public class Exhibit extends AppCompatActivity implements View.OnClickListener {
     private String getCurrentUserId() {
         // 現在のユーザーIDを取得するロジックを実装
         SharedPreferences sharedPreferences = getSharedPreferences("UserPrefs", MODE_PRIVATE);
-        String userId = sharedPreferences.getString("userId", "");
-        return "userId";
+        String userId = sharedPreferences.getString("user_id", "");
+        return userId;
     }
 }

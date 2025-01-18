@@ -1,7 +1,5 @@
 package com.example.schola_ver3;
 
-import static android.app.DownloadManager.COLUMN_ID;
-
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
@@ -14,11 +12,16 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
 
-//import com.example.korekore.R;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.Random;
 
 public class ProductDetail extends AppCompatActivity implements View.OnClickListener {
 
@@ -34,55 +37,32 @@ public class ProductDetail extends AppCompatActivity implements View.OnClickList
     private TextView priceTextView;
     private TextView deliveryMethodTextView;
     private TextView regionTextView;
+    private TextView exhibituserTextView;
 
-    private int userAge;
+    private String productId;
 
-
+    private int age;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_product_detail);
 
-        getage();
-        SharedPreferences prefs = getSharedPreferences("ProductPrefs", MODE_PRIVATE);
-        SharedPreferences.Editor editor = prefs.edit();
-        editor.putString("productId", COLUMN_ID);
-        editor.apply();
+        // Intentから商品IDを取得
+        Intent intent = getIntent();
+        productId = intent.getStringExtra("商品ID");
+
+        // 商品IDをSharedPreferencesに保存
+        if (productId != null) {
+            SharedPreferences sharedPreferences = getSharedPreferences("ProductPrefs", MODE_PRIVATE);
+            SharedPreferences.Editor editor = sharedPreferences.edit();
+            editor.putString("product_id", productId);
+            editor.apply();
+        }
 
         initializeViews();
         setupClickListeners();
         displayProductDetails();
-    }
-
-    private void getage() {
-//// データベースヘルパーのインスタンスを作成
-//        UserDatabaseHelper dbHelper = new UserDatabaseHelper(this);
-//        SQLiteDatabase db = dbHelper.getReadableDatabase();
-//
-//// ユーザIDが一致するレコードを検索
-//        String[] projection = {"old"};
-//        String selection = "userId = ?";
-//        String[] selectionArgs = {currentUserId};
-//
-//        Cursor cursor = db.query(
-//                "ユーザテーブル",
-//                projection,
-//                selection,
-//                selectionArgs,
-//                null,
-//                null,
-//                null
-//        );
-//
-//        userAge = "";
-//        if (cursor.moveToFirst()) {
-//            userAge = cursor.getString(cursor.getColumnIndexOrThrow("old"));
-//        }
-//
-//        cursor.close();
-//        db.close();
-
     }
 
     private void initializeViews() {
@@ -94,10 +74,11 @@ public class ProductDetail extends AppCompatActivity implements View.OnClickList
         productImageView = findViewById(R.id.productImageView);
         productNameTextView = findViewById(R.id.productNameTextView);
         productDescriptionTextView = findViewById(R.id.productDescriptionTextView);
-        categoryTextView = findViewById(R.id.categoryTextView); // 修正
-        priceTextView = findViewById(R.id.priceTextView); // 修正
-        deliveryMethodTextView = findViewById(R.id.deliveryMethodTextView); // 修正
-        regionTextView = findViewById(R.id.regionTextView); // 修正
+        categoryTextView = findViewById(R.id.categoryTextView);
+        priceTextView = findViewById(R.id.priceTextView);
+        deliveryMethodTextView = findViewById(R.id.deliveryMethodTextView);
+        regionTextView = findViewById(R.id.regionTextView);
+        exhibituserTextView = findViewById(R.id.exhibituserTextView);
     }
 
     private void setupClickListeners() {
@@ -145,7 +126,62 @@ public class ProductDetail extends AppCompatActivity implements View.OnClickList
         } else {
             regionTextView.setText("地域: 未設定");
         }
+
+        exhibituserTextView.setText("出品者ID: " + intent.getStringExtra("出品者ID"));
+
+        // ユーザーの生年月日を取得して高校生以上か未満かを判断
+        checkUserAgeAndDisplayMessage();
     }
+
+    private void checkUserAgeAndDisplayMessage() {
+        SharedPreferences sharedPreferences = getSharedPreferences("UserPrefs", MODE_PRIVATE);
+        String userId = sharedPreferences.getString("user_id", null);
+
+        if (userId != null) {
+            DatabaseHelper dbHelper = new DatabaseHelper(this);
+            SQLiteDatabase db = dbHelper.getReadableDatabase();
+            Cursor cursor = dbHelper.getMemberInfo(userId);
+
+            if (cursor != null && cursor.moveToFirst()) {
+                String birthday = cursor.getString(cursor.getColumnIndex(DatabaseHelper.COLUMN_BIRTHDAY));
+
+                // 生年月日がYYYYMMDD形式で保存されていると仮定
+                SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
+                try {
+                    Date birthDate = sdf.parse(birthday);
+
+                    // 現在の日付を取得し、4月1日の日付を設定
+                    Calendar today = Calendar.getInstance();
+                    Calendar graduationDate = Calendar.getInstance();
+                    graduationDate.set(today.get(Calendar.YEAR), Calendar.APRIL, 1); // 4月1日
+
+                    // 年齢計算
+                    age = today.get(Calendar.YEAR) - graduationDate.get(Calendar.YEAR);
+
+//                    // 高校生以上か未満かの判断
+//                    if (today.before(graduationDate)) {
+//                        age--; // 4月1日以前はまだ高校生未満
+//                    }
+//
+//                    if (age >= 16) { // 高校生以上（16歳以上）
+//                        Toast.makeText(this, "高校生以上です。", Toast.LENGTH_SHORT).show();
+//                    } else { // 高校生未満
+//                        Toast.makeText(this, "高校生未満です。", Toast.LENGTH_SHORT).show();
+//                    }
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                    Toast.makeText(this, "誕生日のフォーマットが無効です。", Toast.LENGTH_SHORT).show();
+                }
+            } else {
+                Toast.makeText(this, "ユーザー情報が見つかりません。", Toast.LENGTH_SHORT).show();
+            }
+            if (cursor != null) cursor.close();
+            db.close();
+        } else {
+            Toast.makeText(this, "ユーザーIDが見つかりません。", Toast.LENGTH_SHORT).show();
+        }
+    }
+
     @Override
     public void onClick(View v) {
         if (v.getId() == R.id.evaluationbtn) {
@@ -154,13 +190,16 @@ public class ProductDetail extends AppCompatActivity implements View.OnClickList
             // 出品者プロフィール画面へ
         } else if (v.getId() == R.id.buybtn) {
             // 購入画面へ
-//            if (userAge <= 15) {
-//                Intent intent = new Intent(this, ParentCertification.class);
-//                startActivity(intent);
-//            } else {
-//                Intent intent = new Intent(this, Buy.class);
-//                startActivity(intent);
-//            }
+            // 購入処理をここに追加することができます。
+            if (age >= 16) { // 高校生以上（16歳以上）
+                Intent intent = new Intent(this, Buy.class);
+                intent.putExtra("商品ID", productId);
+                startActivity(intent);
+            } else {
+                Intent intent = new Intent(this, Buy.class);
+                intent.putExtra("商品ID", productId);
+                startActivity(intent);
+            }
         } else if (v.getId() == R.id.chatbtn) {
             Intent intent = new Intent(this, HomePage.class);
             startActivity(intent);
