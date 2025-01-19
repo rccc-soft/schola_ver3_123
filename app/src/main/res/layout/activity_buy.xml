@@ -134,39 +134,13 @@
             android:textSize="20sp"
             android:textStyle="bold" />
 
-        <RadioGroup
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-
-            <RadioButton
-                android:id="@+id/creditCardSelectButton"
-                android:layout_width="225dp"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"
-                android:layout_marginTop="5dp"
-                android:background="@drawable/radio_button_selector"
-                android:text="クレジットカード"
-                android:textColor="#79747E"
-                android:textSize="20sp"
-                android:textStyle="bold"
-                android:button="@null"
-                android:paddingLeft="30dp" />
-
-            <RadioButton
-                android:id="@+id/electronicMoneySelectButton"
-                android:layout_width="225dp"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"
-                android:layout_marginTop="5dp"
-                android:background="@drawable/radio_button_selector"
-                android:text="電子マネー"
-                android:textColor="#79747E"
-                android:textSize="20sp"
-                android:textStyle="bold"
-                android:button="@null"
-                android:paddingLeft="30dp" />
-
-        </RadioGroup>
+        <Spinner
+            android:id="@+id/paymentMethodSpinner"
+            android:layout_gravity="center_horizontal"
+            android:layout_width="300dp"
+            android:layout_height="50dp"
+            android:popupBackground="#FFFFFF"
+            tools:listitem="@android:layout/simple_spinner_dropdown_item" />
 
         <Button
             android:id="@+id/buyButton"

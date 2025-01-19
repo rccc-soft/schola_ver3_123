@@ -11,6 +11,8 @@ import android.widget.TextView;
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
 
+//import com.example.korekore.R;
+
 //Loginから
 public class Rule extends AppCompatActivity implements View.OnClickListener{
     private Button acceptbtn;

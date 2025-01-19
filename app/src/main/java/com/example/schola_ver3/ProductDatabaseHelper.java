@@ -1,6 +1,9 @@
 package com.example.schola_ver3;
 
+import static com.example.schola_ver3.DatabaseHelper.TABLE_MEMBERS;
+
 import android.content.Context;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
@@ -8,19 +11,19 @@ public class ProductDatabaseHelper extends SQLiteOpenHelper {
     private static final int DATABASE_VERSION = 2;
     private static final String DATABASE_NAME = "product.db";
 
-    private static final String TABLE_NAME = "商品テーブル";
-    private static final String COLUMN_ID = "商品ID";
-    private static final String COLUMN_SELLER_ID = "出品者ID";
-    private static final String COLUMN_URL = "商品URL";
-    private static final String COLUMN_IMAGE = "商品画像";
-    private static final String COLUMN_PRICE = "金額";
-    private static final String COLUMN_NAME = "商品名";
-    private static final String COLUMN_CATEGORY = "カテゴリ";
-    private static final String COLUMN_REGION = "地域";
-    private static final String COLUMN_DATE = "出品日時";
-    private static final String COLUMN_DESCRIPTION = "商品説明";
-    private static final String COLUMN_SOLD = "購入済み";
-    private static final String COLUMN_DELIVERY = "配送方法";
+    public static final String TABLE_NAME = "商品テーブル";
+    public static final String COLUMN_ID = "商品ID";
+    public static final String COLUMN_SELLER_ID = "出品者ID";
+    public static final String COLUMN_URL = "商品URL";
+    public static final String COLUMN_IMAGE = "商品画像";
+    public static final String COLUMN_PRICE = "金額";
+    public static final String COLUMN_NAME = "商品名";
+    public static final String COLUMN_CATEGORY = "カテゴリ";
+    public static final String COLUMN_REGION = "地域";
+    public static final String COLUMN_DATE = "出品日時";
+    public static final String COLUMN_DESCRIPTION = "商品説明";
+    public static final String COLUMN_SOLD = "購入済み";
+    public static final String COLUMN_DELIVERY = "配送方法";
 
     private static final String SQL_CREATE_ENTRIES =
             "CREATE TABLE " + TABLE_NAME + " (" +
@@ -42,6 +45,12 @@ public class ProductDatabaseHelper extends SQLiteOpenHelper {
 
     public ProductDatabaseHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
+    }
+
+    public Cursor getProductInfo(String productId) {
+        SQLiteDatabase db = this.getReadableDatabase();
+        String query = "SELECT * FROM " + TABLE_NAME + " WHERE " + COLUMN_ID + " = ?";
+        return db.rawQuery(query, new String[]{productId});
     }
 
     @Override

@@ -7,6 +7,8 @@ import android.widget.Button;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+//import com.example.korekore.R;
+
 /**
  * メインアクティビティ
  * ユーザーが他の主要な機能にアクセスするための入口

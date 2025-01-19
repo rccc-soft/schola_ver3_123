@@ -1,6 +1,7 @@
 package com.example.schola_ver3;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Bitmap;
@@ -15,6 +16,7 @@ import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
+
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -50,6 +52,7 @@ public class ExhibitList extends AppCompatActivity implements View.OnClickListen
         exlist_mypagebtn = findViewById(R.id.exlist_mypagebtn);
         exlist_mypagebtn.setOnClickListener(this);
 
+
         dbHelper = new ProductDatabaseHelper(this);
 
         displayUserProducts();
@@ -64,6 +67,7 @@ public class ExhibitList extends AppCompatActivity implements View.OnClickListen
     private void displayUserProducts() {
         SQLiteDatabase db = dbHelper.getReadableDatabase();
         String userId = getCurrentUserId();
+
 
         // 出品者IDが一致する商品の取得
         Cursor cursor = db.rawQuery("SELECT * FROM 商品テーブル WHERE 出品者ID = ? ORDER BY 出品日時 ASC", new String[]{userId});
@@ -117,7 +121,7 @@ public class ExhibitList extends AppCompatActivity implements View.OnClickListen
             TextView priceTextView = productView.findViewById(R.id.productPriceTextView);
 
             nameTextView.setText((String) product.get("商品名"));
-            priceTextView.setText((String) product.get("金額"));
+            priceTextView.setText("￥" + (String) product.get("金額"));
 
             byte[] imageData = (byte[]) product.get("商品画像");
             Bitmap bitmap = BitmapFactory.decodeByteArray(imageData, 0, imageData.length);
@@ -174,6 +178,9 @@ public class ExhibitList extends AppCompatActivity implements View.OnClickListen
 
     private String getCurrentUserId() {
         // 現在のユーザーIDを取得するロジックを実装
-        return "dummy_user_id"; // 実際には適切なユーザーIDを取得する必要があります
+        SharedPreferences sharedPreferences = getSharedPreferences("UserPrefs", MODE_PRIVATE);
+        String userId = sharedPreferences.getString("user_id", "");
+//        String userId = "user_id";
+        return userId;
     }
 }

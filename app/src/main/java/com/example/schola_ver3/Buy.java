@@ -8,19 +8,24 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.RadioButton;
+import android.widget.Spinner;
 import android.widget.TextView;
+import android.util.Log;
 import androidx.appcompat.app.AppCompatActivity;
+import android.widget.ArrayAdapter;
 
 public class Buy extends AppCompatActivity {
+    private static final String TAG = "Buy";
+    private static final int REQUEST_BUY_CHECK = 1;
+
     private RadioButton deliverySelectButton;
     private RadioButton handDeliverySelectButton;
-    private RadioButton creditCardSelectButton;
-    private RadioButton electronicMoneySelectButton;
+    private Spinner paymentMethodSpinner; // Spinnerを追加
     private TextView addressTextView;
     private TextView priceTextView;
     private Button buyButton;
     private ProductDatabaseHelper dbHelper;
-    private String selectedPaymentMethod = "";
+    private String productId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -30,106 +35,96 @@ public class Buy extends AppCompatActivity {
         initializeViews();
         dbHelper = new ProductDatabaseHelper(this);
 
+        Intent intent = getIntent();
+        productId = intent.getStringExtra("商品ID");
+        if (productId == null) {
+            Log.e(TAG, "商品IDがIntentに含まれていません。");
+            finish();
+            return;
+        }
+
         setDeliveryMethod();
         setAddress();
         setPrice();
-        setupPaymentMethodListeners();
+        setupPaymentMethodSpinner(); // Spinnerの設定メソッドを呼び出し
         setupBuyButtonListener();
     }
 
     private void initializeViews() {
         deliverySelectButton = findViewById(R.id.deliverySelectButton);
         handDeliverySelectButton = findViewById(R.id.handDeliverySelectButton);
-        creditCardSelectButton = findViewById(R.id.creditCardSelectButton);
-        electronicMoneySelectButton = findViewById(R.id.electronicMoneySelectButton);
+        paymentMethodSpinner = findViewById(R.id.paymentMethodSpinner); // Spinnerの初期化
         addressTextView = findViewById(R.id.textView13);
         priceTextView = findViewById(R.id.textView12);
         buyButton = findViewById(R.id.buyButton);
     }
 
     private void setDeliveryMethod() {
-        SharedPreferences prefs = getSharedPreferences("ProductPrefs", MODE_PRIVATE);
-        String productId = prefs.getString("productId", "");
-
-        SQLiteDatabase db = dbHelper.getReadableDatabase();
-        String[] projection = {ProductDatabaseHelper.COLUMN_DELIVERY};
-        String selection = ProductDatabaseHelper.COLUMN_ID + " = ?";
-        String[] selectionArgs = {productId};
-
-        Cursor cursor = db.query(
-                ProductDatabaseHelper.TABLE_NAME,
-                projection,
-                selection,
-                selectionArgs,
-                null,
-                null,
-                null
-        );
-
-        if (cursor.moveToFirst()) {
+        Cursor cursor = dbHelper.getProductInfo(productId);
+        if (cursor != null && cursor.moveToFirst()) {
             String deliveryMethod = cursor.getString(cursor.getColumnIndexOrThrow(ProductDatabaseHelper.COLUMN_DELIVERY));
             if ("配送".equals(deliveryMethod)) {
                 deliverySelectButton.setChecked(true);
+                deliverySelectButton.setBackgroundResource(R.drawable.radio_button_selected);
+                handDeliverySelectButton.setBackgroundResource(R.drawable.radio_button_normal);
             } else if ("手渡し".equals(deliveryMethod)) {
                 handDeliverySelectButton.setChecked(true);
+                handDeliverySelectButton.setBackgroundResource(R.drawable.radio_button_selected);
+                deliverySelectButton.setBackgroundResource(R.drawable.radio_button_normal);
             }
+            cursor.close();
+        } else {
+            Log.e(TAG, "商品情報の取得に失敗しました。");
         }
-        cursor.close();
     }
 
     private void setAddress() {
         SharedPreferences prefs = getSharedPreferences("UserPrefs", MODE_PRIVATE);
-        String userId = prefs.getString("userId", "");
-
+        String userId = prefs.getString("user_id", "");
         // ここで配送先データベースからユーザーの住所を取得し、addressTextViewにセットする
-        // 例: addressTextView.setText(getAddressFromDatabase(userId));
     }
 
     private void setPrice() {
-        SharedPreferences prefs = getSharedPreferences("ProductPrefs", MODE_PRIVATE);
-        String productId = prefs.getString("productId", "");
-
-        SQLiteDatabase db = dbHelper.getReadableDatabase();
-        String[] projection = {ProductDatabaseHelper.COLUMN_PRICE};
-        String selection = ProductDatabaseHelper.COLUMN_ID + " = ?";
-        String[] selectionArgs = {productId};
-
-        Cursor cursor = db.query(
-                ProductDatabaseHelper.TABLE_NAME,
-                projection,
-                selection,
-                selectionArgs,
-                null,
-                null,
-                null
-        );
-
-        if (cursor.moveToFirst()) {
+        Cursor cursor = dbHelper.getProductInfo(productId);
+        if (cursor != null && cursor.moveToFirst()) {
             int price = cursor.getInt(cursor.getColumnIndexOrThrow(ProductDatabaseHelper.COLUMN_PRICE));
             priceTextView.setText(String.valueOf(price));
+            cursor.close();
+        } else {
+            Log.e(TAG, "商品価格の取得に失敗しました。");
         }
-        cursor.close();
     }
 
-    private void setupPaymentMethodListeners() {
-        creditCardSelectButton.setOnClickListener(v -> {
-            creditCardSelectButton.setChecked(true);
-            electronicMoneySelectButton.setChecked(false);
-            selectedPaymentMethod = "クレジットカード";
-        });
-
-        electronicMoneySelectButton.setOnClickListener(v -> {
-            electronicMoneySelectButton.setChecked(true);
-            creditCardSelectButton.setChecked(false);
-            selectedPaymentMethod = "電子マネー";
-        });
+    private void setupPaymentMethodSpinner() {
+        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,
+                R.array.payment_method_array, android.R.layout.simple_spinner_item);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        paymentMethodSpinner.setAdapter(adapter);
     }
 
     private void setupBuyButtonListener() {
         buyButton.setOnClickListener(v -> {
+            String selectedPaymentMethod = paymentMethodSpinner.getSelectedItem().toString(); // 選択された支払い方法を取得
             Intent intent = new Intent(Buy.this, BuyCheck.class);
             intent.putExtra("paymentMethod", selectedPaymentMethod);
-            startActivity(intent);
+            intent.putExtra("product_id", productId);
+            startActivityForResult(intent, REQUEST_BUY_CHECK);
         });
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == REQUEST_BUY_CHECK) {
+            if (resultCode == RESULT_OK) {
+                //支払い方法によって画面分岐を作成する
+                //if
+                Intent intent = new Intent(Buy.this, BuySuccess.class);
+                startActivity(intent);
+                finish();
+            } else if (resultCode == RESULT_CANCELED) {
+                // ユーザーが購入をキャンセルした場合の処理
+            }
+        }
     }
 }

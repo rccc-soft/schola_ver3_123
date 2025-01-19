@@ -110,7 +110,7 @@
                     android:id="@+id/productNameEditText"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="例）商品名を入力してください"
+                    android:hint="例)鉛筆"
                     android:padding="12dp" />
             </LinearLayout>
 
@@ -135,7 +135,7 @@
                     android:id="@+id/productDescriptionEditText"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="例）商品の説明を入力してください"
+                    android:hint="例)これは鉛筆です"
                     android:minHeight="100dp"
                     android:padding="12dp"
                     android:gravity="top" />
@@ -231,7 +231,7 @@
                     android:id="@+id/productPriceEditText"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="例）販売価格を入力してください"
+                    android:hint="例)2000"
                     android:padding="12dp"
                     android:inputType="numberDecimal" />
             </LinearLayout>

@@ -7,7 +7,7 @@ import android.widget.Button;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.example.korekore.R;
+//import com.example.korekore.R;
 
 public class MemberComp extends AppCompatActivity implements View.OnClickListener {
     private Button loginButton;
