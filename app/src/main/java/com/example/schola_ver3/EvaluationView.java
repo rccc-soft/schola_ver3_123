@@ -23,7 +23,7 @@ public class EvaluationView {
      * @param userMemberId ユーザーのmemberID
      * @param callback     評価スコア取得後に実行されるコールバック
      */
-    public void fetchAndDisplayReviewScore(int userMemberId, ReviewScoreCallback callback) {
+    public void fetchAndDisplayReviewScore(String userMemberId, ReviewScoreCallback callback) {
         executorService.execute(() -> {
             try {
                 // 評価平均を取得

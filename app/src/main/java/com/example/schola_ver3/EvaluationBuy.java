@@ -1,6 +1,10 @@
 package com.example.schola_ver3;
 
+import static android.content.ContentValues.TAG;
+
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.util.Log;
@@ -12,7 +16,7 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-//import com.example.korekore.R;
+//import com.example.  ;
 
 public class EvaluationBuy extends AppCompatActivity implements View.OnClickListener {
 
@@ -25,16 +29,42 @@ public class EvaluationBuy extends AppCompatActivity implements View.OnClickList
     // Example: receiving these from the Intent
 
     private int reviewScore = 0; // 現在選択されている評価スコア
-    private int sellerId;
-    private int buyerId;
+//    private int sellerId;
+//    private int buyerId;
     private ReviewManager reviewManager; // ReviewManager を使用
+
+    private String productId;
+    private String sellerId;
+    private String buyerId;
+
+    private ProductDatabaseHelper dbHelper;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         // Receive IDs via Intent
-        sellerId = getIntent().getIntExtra("seller_member_id", -1);
-        buyerId = getIntent().getIntExtra("buyer_member_id", -1);
+        SharedPreferences sharedPreferences = getSharedPreferences("UserPrefs", MODE_PRIVATE);
+        buyerId = sharedPreferences.getString("user_id", "");
+        SharedPreferences prefs = getSharedPreferences("ProductPrefs", MODE_PRIVATE);
+        productId = prefs.getString("product_id", "");
+
+        dbHelper = new ProductDatabaseHelper(this);
+//        sellerId = dbHelper.getSellerIdByProductId(productId);
+        setDeliveryMethod();
+
+
+        if (sellerId != null) {
+            // 出品者IDが見つかった場合の処理
+            System.out.println("出品者ID: " + sellerId);
+        } else {
+            // 出品者IDが見つからなかった場合の処理
+            System.out.println("該当する商品が見つかりません");
+        }
+
+
+//        sellerId = getIntent().getIntExtra("seller_member_id", -1);
+//        buyerId = getIntent().getIntExtra("buyer_member_id", -1);
         setContentView(R.layout.activity_buyer_evaluation_0);
 
         // Database initialization
@@ -86,7 +116,7 @@ public class EvaluationBuy extends AppCompatActivity implements View.OnClickList
         } else if (id == R.id.editButton) {
             submitReview();
             // Intentの起動は必要に応じて変更
-            Intent intent = new Intent(getApplication(), ReviewListActivity.class);
+            Intent intent = new Intent(getApplication(), HomePage.class);
             startActivity(intent);
         }
     }
@@ -108,23 +138,24 @@ public class EvaluationBuy extends AppCompatActivity implements View.OnClickList
             return;
         }
 
-        // Validate IDs
-        if (sellerId == -1 || buyerId == -1) {
-            showToast("ユーザー情報が見つかりません");
+        Log.d("EvaluationSell", "Submitting review: buyerId=" + buyerId + ", sellerId=" + sellerId + ", score=" + reviewScore + ", message=" + message);
+
+        if (sellerId == null || sellerId.isEmpty()) {
+            showToast("出品者IDが取得できません");
             return;
         }
 
-        Log.d("EvaluationSell", "Submitting review: buyerId=" + buyerId + ", sellerId=" + sellerId + ", score=" + reviewScore + ", message=" + message);
 
         try {
+            System.out.println("購入者ID: " + buyerId);
+            System.out.println("出品者ID: " + sellerId);
+            System.out.println("レビュースコア: " + reviewScore);
             reviewManager.addReview(buyerId, sellerId, reviewScore, message);
             showToast("レビューが送信されました");
-            // Clear the input
             messageInput.setText("");
-            // 遷移またはアクティビティを終了
             finish();
         } catch (Exception e) {
-            showToast("レビューの送信に失敗しました");
+            showToast("レビューの送信に失敗しました: " + e.getMessage());
             Log.e("EvaluationSell", "Error adding review", e);
         }
     }
@@ -134,6 +165,15 @@ public class EvaluationBuy extends AppCompatActivity implements View.OnClickList
         super.onDestroy();
         if (reviewManager != null) {
             reviewManager.close();
+        }
+    }
+
+    private void setDeliveryMethod() {
+        Cursor cursor = dbHelper.getProductInfo(productId);
+        if (cursor != null && cursor.moveToFirst()) {
+            sellerId = cursor.getString(cursor.getColumnIndexOrThrow(ProductDatabaseHelper.COLUMN_SELLER_ID));
+        } else {
+            Log.e(TAG, "商品情報の取得に失敗しました。");
         }
     }
 }

@@ -2,13 +2,13 @@ package com.example.schola_ver3;
 
 public class Review {
     private int reviewId;
-    private int buyerMemberId;
-    private int sellerMemberId;
+    private String buyerMemberId;
+    private String sellerMemberId;
     private int reviewScore;
     private String reviewComment;
 
     // コンストラクタ
-    public Review(int reviewId, int buyerMemberId, int sellerMemberId, int reviewScore, String reviewComment) {
+    public Review(int reviewId, String buyerMemberId, String sellerMemberId, int reviewScore, String reviewComment) {
         this.reviewId = reviewId;
         this.buyerMemberId = buyerMemberId;
         this.sellerMemberId = sellerMemberId;
@@ -21,11 +21,11 @@ public class Review {
         return reviewId;
     }
 
-    public int getBuyerMemberId() {
+    public String getBuyerMemberId() {
         return buyerMemberId;
     }
 
-    public int getSellerMemberId() {
+    public String getSellerMemberId() {
         return sellerMemberId;
     }
 

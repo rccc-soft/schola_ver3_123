@@ -12,7 +12,7 @@ import java.util.List;
 
 public class review_seller_DB extends SQLiteOpenHelper {
     private static final String DATABASE_NAME = "reviews.db";
-    private static final int DATABASE_VERSION = 4;
+    private static final int DATABASE_VERSION = 7;
     public static final String DATABASE_TABLENAME = "REVIEWdb";
     public static final String COLUMN_REVIEW_ID = "review_id";
     public static final String COLUMN_BUYER_MEMBER_ID = "buyer_member_id";
@@ -28,8 +28,8 @@ public class review_seller_DB extends SQLiteOpenHelper {
     public void onCreate(SQLiteDatabase db) {
         String CREATE_REVIEW_TABLE = "CREATE TABLE " + DATABASE_TABLENAME + "("
                 + COLUMN_REVIEW_ID + " INTEGER PRIMARY KEY AUTOINCREMENT,"
-                + COLUMN_BUYER_MEMBER_ID + " INTEGER NOT NULL,"
-                + COLUMN_SELLER_MEMBER_ID + " INTEGER NOT NULL,"
+                + COLUMN_BUYER_MEMBER_ID + " TEXT NOT NULL,"
+                + COLUMN_SELLER_MEMBER_ID + " TEXT NOT NULL,"
                 + COLUMN_REVIEW_SCORE + " INTEGER NOT NULL,"
                 + COLUMN_REVIEW_COMMENT + " TEXT"
                 + ")";
@@ -47,14 +47,18 @@ public class review_seller_DB extends SQLiteOpenHelper {
     /**
      * レビューを追加するメソッド
      */
-    public void addReview(int buyerMemberId, int sellerMemberId, int reviewScore, String reviewComment) throws Exception {
+    public void addReview(String buyerMemberId, String sellerMemberId, int reviewScore, String reviewComment) throws Exception {
+        if (sellerMemberId == null || sellerMemberId.isEmpty()) {
+            throw new IllegalArgumentException("seller_member_id cannot be null or empty");
+        }
+
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues values = new ContentValues();
-        // review_id を手動で設定しない
         values.put(COLUMN_BUYER_MEMBER_ID, buyerMemberId);
         values.put(COLUMN_SELLER_MEMBER_ID, sellerMemberId);
         values.put(COLUMN_REVIEW_SCORE, reviewScore);
         values.put(COLUMN_REVIEW_COMMENT, reviewComment);
+
         try {
             db.insertOrThrow(DATABASE_TABLENAME, null, values);
         } catch (Exception e) {
@@ -80,8 +84,8 @@ public class review_seller_DB extends SQLiteOpenHelper {
             if (cursor.moveToFirst()) {
                 do {
                     int reviewId = cursor.getInt(cursor.getColumnIndexOrThrow(COLUMN_REVIEW_ID));
-                    int buyerId = cursor.getInt(cursor.getColumnIndexOrThrow(COLUMN_BUYER_MEMBER_ID));
-                    int sellerId = cursor.getInt(cursor.getColumnIndexOrThrow(COLUMN_SELLER_MEMBER_ID));
+                    String buyerId = cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_BUYER_MEMBER_ID));
+                    String sellerId = cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_SELLER_MEMBER_ID));
                     int reviewScore = cursor.getInt(cursor.getColumnIndexOrThrow(COLUMN_REVIEW_SCORE));
                     String reviewComment = cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_REVIEW_COMMENT));
 
@@ -105,7 +109,7 @@ public class review_seller_DB extends SQLiteOpenHelper {
     /**
      * 平均レビュースコアを取得するメソッド
      */
-    public double getAverageReviewScore(int sellerMemberId) throws Exception {
+    public double getAverageReviewScore(String sellerMemberId) throws Exception {
         SQLiteDatabase db = this.getReadableDatabase();
         double average = 0.0;
         Cursor cursor = null;
@@ -131,7 +135,7 @@ public class review_seller_DB extends SQLiteOpenHelper {
     /**
      * レビューのスコア一覧を取得するメソッド
      */
-    public List<Integer> getReviewScores(int sellerMemberId) throws Exception {
+    public List<Integer> getReviewScores(String sellerMemberId) throws Exception {
         List<Integer> scores = new ArrayList<>();
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor cursor = null;

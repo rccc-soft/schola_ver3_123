@@ -11,7 +11,7 @@ import android.widget.ImageButton;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-//import com.example.korekore.R;
+;
 
 public class MemberView extends AppCompatActivity {
 

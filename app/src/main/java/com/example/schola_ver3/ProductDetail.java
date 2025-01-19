@@ -186,6 +186,8 @@ public class ProductDetail extends AppCompatActivity implements View.OnClickList
     public void onClick(View v) {
         if (v.getId() == R.id.evaluationbtn) {
             // 出品者評価ボタンの処理
+            Intent intent = new Intent(this, EvaluationSell.class);
+            startActivity(intent);
         } else if (v.getId() == R.id.profilebtn) {
             // 出品者プロフィール画面へ
         } else if (v.getId() == R.id.buybtn) {

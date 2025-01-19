@@ -118,7 +118,6 @@ public class Buy extends AppCompatActivity {
         if (requestCode == REQUEST_BUY_CHECK) {
             if (resultCode == RESULT_OK) {
                 //支払い方法によって画面分岐を作成する
-                //if
                 Intent intent = new Intent(Buy.this, BuySuccess.class);
                 startActivity(intent);
                 finish();

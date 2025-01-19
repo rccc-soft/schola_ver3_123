@@ -9,7 +9,7 @@ import android.widget.ImageButton;
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
 
-//import com.example.korekore.R;
+;
 
 public class Setting extends AppCompatActivity implements View.OnClickListener {
 

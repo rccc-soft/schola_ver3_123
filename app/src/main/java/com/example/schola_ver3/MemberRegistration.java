@@ -14,8 +14,6 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-//import com.example.korekore.R;
-
 import java.util.Random;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -207,12 +205,22 @@ public class MemberRegistration extends AppCompatActivity implements View.OnClic
     private void sendEmailConfirmation(String userId, String toEmail) {
         ExecutorService executor = Executors.newSingleThreadExecutor();
         executor.execute(() -> {
+//            try {
+//                EmailSender.sendEmail(toEmail, "Member Registration Confirmation",
+//                        "Your registration is complete. Your Member ID is: " + userId);
+//                runOnUiThread(() -> Toast.makeText(MemberRegistration.this, "Email sent successfully", Toast.LENGTH_SHORT).show());
+//            } catch (Exception e) {
+//                Log.e("SendEmailTask", "Error sending email", e);
+//                runOnUiThread(() -> Toast.makeText(MemberRegistration.this, "Failed to send email: " + e.getMessage(), Toast.LENGTH_LONG).show());
+//            }
+//        });
             try {
                 EmailSender.sendEmail(toEmail, "Member Registration Confirmation",
                         "Your registration is complete. Your Member ID is: " + userId);
+                Log.d("MemberRegistration", "Email confirmation sent successfully");
                 runOnUiThread(() -> Toast.makeText(MemberRegistration.this, "Email sent successfully", Toast.LENGTH_SHORT).show());
             } catch (Exception e) {
-                Log.e("SendEmailTask", "Error sending email", e);
+                Log.e("MemberRegistration", "Error sending email confirmation", e);
                 runOnUiThread(() -> Toast.makeText(MemberRegistration.this, "Failed to send email: " + e.getMessage(), Toast.LENGTH_LONG).show());
             }
         });
