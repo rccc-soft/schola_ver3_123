@@ -19,7 +19,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 
 // MyPage から
-public class SalesTransferActivity extends AppCompatActivity implements View.OnClickListener {
+public class SalesTransfer extends AppCompatActivity implements View.OnClickListener {
     private static final int REQUEST_CODE = 1;
     private ActivityResultLauncher<Intent> resultLauncher;
     private ImageButton backButton; // 戻るボタン
@@ -86,7 +86,7 @@ public class SalesTransferActivity extends AppCompatActivity implements View.OnC
                 result -> {
                     if (result.getResultCode() == RESULT_OK) {
                         // 振込完了画面へ
-                        Intent intent = new Intent(getApplication(), SalesTransferSuccessActivity.class);
+                        Intent intent = new Intent(getApplication(), SalesTransferSuccess.class);
                         startActivity(intent);
 
                     } else if (result.getResultCode() == RESULT_CANCELED) {
@@ -94,7 +94,7 @@ public class SalesTransferActivity extends AppCompatActivity implements View.OnC
                         revertSalesData();
 
                         // 振込画面に戻る
-                        Intent intent = new Intent(getApplication(), SalesTransferActivity.class);
+                        Intent intent = new Intent(getApplication(), SalesTransfer.class);
                         startActivity(intent);
 
                     }
@@ -170,7 +170,7 @@ public class SalesTransferActivity extends AppCompatActivity implements View.OnC
             insertSalesData(userId, transferAmount);
 
             // 記入漏れがなければ振込確認画面へ
-            Intent intent = new Intent(this, SalesTransferCheckActivity.class);
+            Intent intent = new Intent(this, SalesTransferCheck.class);
             resultLauncher.launch(intent);
         }
     }

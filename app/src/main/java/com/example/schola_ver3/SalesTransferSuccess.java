@@ -10,7 +10,7 @@ import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
 
 // FAQRequestから
-public class SalesTransferSuccessActivity extends AppCompatActivity implements View.OnClickListener {
+public class SalesTransferSuccess extends AppCompatActivity implements View.OnClickListener {
     private Button homeButton;
 
     @SuppressLint("MissingInflatedId")

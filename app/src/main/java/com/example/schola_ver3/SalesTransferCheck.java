@@ -9,7 +9,7 @@ import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
 
 //SalesTransferから
-public class SalesTransferCheckActivity extends AppCompatActivity implements View.OnClickListener{
+public class SalesTransferCheck extends AppCompatActivity implements View.OnClickListener{
     private Button yesButton;
     private Button noButton;
 
