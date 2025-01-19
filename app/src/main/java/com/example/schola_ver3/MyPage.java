@@ -1,6 +1,7 @@
 package com.example.schola_ver3;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -11,6 +12,7 @@ import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
@@ -22,22 +24,24 @@ import java.util.List;
 
 public class MyPage extends AppCompatActivity implements View.OnClickListener{
 
+    private ConstraintLayout constraintLayout;
+
     // ImageButtonとして宣言するビュー
     private ImageButton imageView; // バックボタン
     private ImageButton homebtn;
-    private ImageButton exhibitedbtn;
-    private ImageButton purchasedbtn;
+    private ImageButton searchbtn;
+    private ImageButton exhibitbtn;
     private ImageButton favoritebtn;
     private ImageButton profilebtn;
 
     // Buttonとして宣言するビュー
-    private Button settingbtn;
-    private Button logoutbtn;
-    private Button faqbtn;
-    private Button salestransferbtn;
+    private Button exhibitlistbtn;
+    private Button purchasedbtn;
     private Button favoritebtn2;
-    private Button purchasedbtn2;
-    private Button SalesTransfer;
+    private Button salestransfer;
+    private Button faqbtn;
+    private Button logoutbtn;
+    private Button settingbtn;
 
     // 星を表すTextView
     private TextView star1;
@@ -61,6 +65,9 @@ public class MyPage extends AppCompatActivity implements View.OnClickListener{
         setContentView(R.layout.activity_mypage);
         //  sellerId = getIntent().getIntExtra("seller_member_id", -1);
 
+        constraintLayout = findViewById(R.id.constraintLayout);
+        constraintLayout.setOnClickListener(this);
+
         // ImageButtonの初期化とリスナー設定
         imageView = findViewById(R.id.imageView);
         imageView.setOnClickListener(this);
@@ -68,8 +75,8 @@ public class MyPage extends AppCompatActivity implements View.OnClickListener{
         homebtn = findViewById(R.id.homebtn);
         homebtn.setOnClickListener(this);
 
-        exhibitedbtn = findViewById(R.id.exhibitedbtn);
-        exhibitedbtn.setOnClickListener(this);
+        searchbtn = findViewById(R.id.searchbtn);
+        searchbtn.setOnClickListener(this);
 
         purchasedbtn = findViewById(R.id.purchasedbtn);
         purchasedbtn.setOnClickListener(this);
@@ -81,8 +88,8 @@ public class MyPage extends AppCompatActivity implements View.OnClickListener{
         profilebtn.setOnClickListener(this);
 
         // Buttonの初期化とリスナー設定
-        SalesTransfer = findViewById(R.id.SalesTransfer);
-        SalesTransfer.setOnClickListener(this);
+        exhibitbtn = findViewById(R.id.exhibitbtn);
+        exhibitbtn.setOnClickListener(this);
 
         settingbtn = findViewById(R.id.settingbtn);
         settingbtn.setOnClickListener(this);
@@ -93,14 +100,14 @@ public class MyPage extends AppCompatActivity implements View.OnClickListener{
         faqbtn = findViewById(R.id.faqbtn);
         faqbtn.setOnClickListener(this);
 
-        salestransferbtn = findViewById(R.id.salestransferbtn);
-        salestransferbtn.setOnClickListener(this);
+        exhibitlistbtn = findViewById(R.id.exhibitlistbtn);
+        exhibitlistbtn.setOnClickListener(this);
 
         favoritebtn2 = findViewById(R.id.favoritebtn2);
         favoritebtn2.setOnClickListener(this);
 
-        purchasedbtn2 = findViewById(R.id.purchasedbtn2);
-        purchasedbtn2.setOnClickListener(this);
+        salestransfer = findViewById(R.id.salestransfer);
+        salestransfer.setOnClickListener(this);
 
         // 星を表すTextViewの初期化
         star1 = findViewById(R.id.textView111);
@@ -117,9 +124,11 @@ public class MyPage extends AppCompatActivity implements View.OnClickListener{
         evaluationView = new EvaluationView(this);
 
         // ユーザーのmemberIDを取得（Intentから取得）
-        int userMemberId = getIntent().getIntExtra("seller_member_id", 1); // 初期値を1に設定
+//        int userMemberId = getIntent().getIntExtra("seller_member_id", 1); // 初期値を1に設定
+        SharedPreferences prefs = getSharedPreferences("UserPrefs", MODE_PRIVATE);
+        String userMemberId = prefs.getString("user_id", "");
 
-        if (userMemberId != -1) { // 初期値を1に設定しているため、この条件は基本的に常にtrue
+        if (userMemberId != null) { // 初期値を1に設定しているため、この条件は基本的に常にtrue
             // 評価データを非同期で取得
             evaluationView.fetchAndDisplayReviewScore(userMemberId, new EvaluationView.ReviewScoreCallback() {
                 @Override
@@ -164,39 +173,46 @@ public class MyPage extends AppCompatActivity implements View.OnClickListener{
         if (id == R.id.imageView){
             Intent intent = new Intent(this, MainActivity_egu.class);
             startActivity(intent);
-        }
-
-       /* if (id == R.id.settingbtn) {
-            Intent intent = new Intent(this, Setting.class);
+        } else if (id == R.id.homebtn) {
+            Intent intent = new Intent(this, HomePage.class);
             startActivity(intent);
+        } else if (id == R.id.searchbtn) {
+            Intent intent = new Intent(this, ProductSearch.class);
+            startActivity(intent);
+        } else if (id == R.id.exhibitbtn) {
+            Intent intent = new Intent(this, Exhibit.class);
+            startActivity(intent);
+        } else if (id == R.id.favoritebtn || id == R.id.favoritebtn2) {
+//            Intent intent = new Intent(this, .class);
+//            startActivity(intent);
+        } else if (id == R.id.profilebtn) {
+//            Intent intent = new Intent(this, ProfileView.class);
+//            startActivity(intent);
+        } else if (id == R.id.exhibitlistbtn) {
+            Intent intent = new Intent(this, ExhibitList.class);
+            startActivity(intent);
+        } else if (id == R.id.purchasedbtn) {
+//            Intent intent = new Intent(this, .class);
+//            startActivity(intent);
+        } else if (id == R.id.salestransfer) {
+
+//            Intent intent = new Intent(this, .class);
+//            startActivity(intent);
+        } else if (id == R.id.faqbtn) {
+//            Intent intent = new Intent(this, .class);
+//            startActivity(intent);
         } else if (id == R.id.logoutbtn) {
             Intent intent = new Intent(this, Logout.class);
             startActivity(intent);
-        } else if (id == R.id.faqbtn) {
-            Intent intent = new Intent(this, FAQRequest.class);
+        } else if (id == R.id.settingbtn) {
+            Intent intent = new Intent(this, Setting.class);
             startActivity(intent);
-        } else if (id == R.id.salestransferbtn || id == R.id.SalesTransfer) {
-            Intent intent = new Intent(this, SalesTransfer.class);
+        } else if (id == R.id.constraintLayout) {
+            Intent intent = new Intent(this, ReviewListActivity.class);
             startActivity(intent);
-        } else if (id == R.id.profilebtn) {
-            Intent intent = new Intent(this, ProfileView.class);
-            startActivity(intent);
-        } else if (id == R.id.favoritebtn || id == R.id.favoritebtn2) {
-            Intent intent = new Intent(this, FavoriteList.class);
-            startActivity(intent);
-        } else if (id == R.id.purchasedbtn || id == R.id.purchasedbtn2) {
-            Intent intent = new Intent(this, PurchasedList.class);
-            startActivity(intent);
-        } else if (id == R.id.homebtn) {
-            Intent intent = new Intent(this, HomeActivity.class); // 適切なクラスに変更
-            startActivity(intent);
-        } else if (id == R.id.exhibitedbtn) {
-            Intent intent = new Intent(this, ExhibitList.class);
-            startActivity(intent);
-        } else if (id == R.id.imageView) {
-            // バックボタンの動作を定義
-            finish(); // 例: アクティビティを終了
-        }*/
+        }
+        // バックボタンの動作を定義
+//        finish(); // 例: アクティビティを終了
     }
 
     /**
