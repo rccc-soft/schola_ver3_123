@@ -85,15 +85,15 @@
             android:scaleType="fitXY"
             app:srcCompat="@drawable/backbutton" />
 
-        <ImageButton
-            android:id="@+id/noticeButton"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:layout_marginStart="290dp"
-            android:layout_marginTop="16dp"
-            android:background="#FFFFFF"
-            android:scaleType="fitXY"
-            app:srcCompat="@drawable/noticebutton" />
+<!--        <ImageButton-->
+<!--            android:id="@+id/noticeButton"-->
+<!--            android:layout_width="40dp"-->
+<!--            android:layout_height="40dp"-->
+<!--            android:layout_marginStart="290dp"-->
+<!--            android:layout_marginTop="16dp"-->
+<!--            android:background="#FFFFFF"-->
+<!--            android:scaleType="fitXY"-->
+<!--            app:srcCompat="@drawable/noticebutton" />-->
 
     </LinearLayout>
 

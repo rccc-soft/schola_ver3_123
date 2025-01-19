@@ -23,7 +23,7 @@ public class SalesTransfer extends AppCompatActivity implements View.OnClickList
     private static final int REQUEST_CODE = 1;
     private ActivityResultLauncher<Intent> resultLauncher;
     private ImageButton backButton; // 戻るボタン
-    private ImageButton noticeButton; //　通知ボタン
+//    private ImageButton noticeButton; //　通知ボタン
     private Button transferButton; // 振込ボタン
     private EditText editTextTransferAmount;
     private SalesDatabaseHelper dbHelper;
@@ -42,8 +42,8 @@ public class SalesTransfer extends AppCompatActivity implements View.OnClickList
         backButton = (ImageButton) findViewById(R.id.backButton);
         backButton.setOnClickListener(this);
 
-        noticeButton = (ImageButton) findViewById(R.id.noticeButton);
-        noticeButton.setOnClickListener(this);
+//        noticeButton = (ImageButton) findViewById(R.id.noticeButton);
+//        noticeButton.setOnClickListener(this);
 
         transferButton = findViewById(R.id.transferButton);
         transferButton.setOnClickListener(this);
