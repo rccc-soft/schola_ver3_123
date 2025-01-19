@@ -56,48 +56,6 @@ public class CreditSetting extends AppCompatActivity implements View.OnClickList
         editTextCVCCVV = findViewById(R.id.editTextCVCCVV);
         editTextName = findViewById(R.id.editTextName);
 
-        // InputFilter を設定
-//        editTextCardNumber.setFilters(new InputFilter[]{
-//                new InputFilter() {
-//                    @Override
-//                    public CharSequence filter(CharSequence source, int start, int end, Spanned dest, int dstart, int dend) {
-//                        // 入力がリーディングゼロ（先頭が 0）の場合も許可
-//                        if (dest.toString().isEmpty() && source.toString().matches("^0+")) {
-//                            return source;
-//                        }
-//                        // それ以外はそのまま許可
-//                        return source;
-//                    }
-//                }
-//        });
-
-//        editTextExpirationDate.setFilters(new InputFilter[]{
-//                new InputFilter() {
-//                    @Override
-//                    public CharSequence filter(CharSequence source, int start, int end, Spanned dest, int dstart, int dend) {
-//                        // 入力がリーディングゼロ（先頭が 0）の場合も許可
-//                        if (dest.toString().isEmpty() && source.toString().matches("^0+")) {
-//                            return source;
-//                        }
-//                        // それ以外はそのまま許可
-//                        return source;
-//                    }
-//                }
-//        });
-
-//        editTextCVCCVV.setFilters(new InputFilter[]{
-//                new InputFilter() {
-//                    @Override
-//                    public CharSequence filter(CharSequence source, int start, int end, Spanned dest, int dstart, int dend) {
-//                        // 入力がリーディングゼロ（先頭が 0）の場合も許可
-//                        if (dest.toString().isEmpty() && source.toString().matches("^0+")) {
-//                            return source;
-//                        }
-//                        // それ以外はそのまま許可
-//                        return source;
-//                    }
-//                }
-//        });
 
         // 共通の InputFilter を作成
         InputFilter allowLeadingZeroFilter = new InputFilter() {
@@ -154,40 +112,6 @@ public class CreditSetting extends AppCompatActivity implements View.OnClickList
 
         // データベースを閉じる
         db.close();
-
-//        // CreditSettingDatabaseHelper を初期化
-//        dbHelper = new CreditDatabaseHelper(this);
-//
-//        SQLiteDatabase db = null;
-//        try {
-//            db = dbHelper.getWritableDatabase();
-//            if (!isTableExists(db, CreditDatabaseHelper.TABLE_NAME)) {
-//                Log.e("DatabaseError", "sales テーブルが存在しません");
-//            }
-//
-//            // 会員IDを取得するロジックをここに追加
-//            String memberId = "1";
-//
-//            // レコードが存在しない場合のみ挿入
-//            dbHelper.insertIfNotExists(memberId);
-//
-//            // 特定の memberId のクレカ情報を取得
-//            int cardNumber = getCardNumber(memberId, db);
-//            int expirationDate = getExpirationDate(memberId, db);
-//            int cardCVCCVV = getCardCVCCVV(memberId, db);
-//            String cardName = getCardName(memberId, db);
-//
-//            // EditText に取得した情報を表示
-//            editTextCardNumber.setText(String.valueOf(cardNumber));
-//            editTextExpirationDate.setText(String.valueOf(expirationDate));
-//            editTextCVCCVV.setText(String.valueOf(cardCVCCVV));
-//            editTextName.setText(cardName);
-//        } finally {
-//            if (db != null) {
-//                db.close();
-//            }
-//        }
-
     }
 
     private String getCardNumber(String userId, SQLiteDatabase db) {
@@ -303,25 +227,6 @@ public class CreditSetting extends AppCompatActivity implements View.OnClickList
             String name = editTextName.getText().toString().trim();
 
             Log.d("DatabaseDebug", "Input Value: " + cardNumber);
-
-            // 記入漏れがないかの処理
-//            if (cardNumber.isEmpty()) {
-//                // 入力されていない場合のエラー処理
-//                editTextCardNumber.setError("カード番号を入力してください");
-//                return;
-//            } else if (expirationDate.isEmpty()) {
-//                // 入力されていない場合のエラー処理
-//                editTextExpirationDate.setError("有効期限を入力してください");
-//                return;
-//            } else if (cardCVCCVV.isEmpty()) {
-//                // 入力されていない場合のエラー処理
-//                editTextCVCCVV.setError("CVC/CVVを入力してください");
-//                return;
-//            } else if (name.isEmpty()) {
-//                // 入力されていない場合のエラー処理
-//                editTextName.setError("名前を入力してください");
-//                return;
-//            }
 
             // 入力内容のバリデーション
             if (!validateCardNumber(cardNumber)) {

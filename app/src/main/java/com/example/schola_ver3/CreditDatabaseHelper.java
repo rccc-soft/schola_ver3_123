@@ -54,18 +54,6 @@ public class CreditDatabaseHelper extends SQLiteOpenHelper {
         db.setForeignKeyConstraintsEnabled(true); // 外部キー制約を有効にする
     }
 
-//    private void setValue(SQLiteDatabase db) {
-//        ContentValues values = new ContentValues();
-//        values.put(MEMBER_ID, "1");
-//        values.put(SALES_AMOUNT, "10000");
-//        long result = db.insert(TABLE_NAME, null, values);
-//        if (result == -1) {
-//            throw new RuntimeException("データの挿入に失敗しました");
-//        } else {
-//            System.out.println("データ挿入成功: member_id=1, sales_amount=1000");
-//        }
-//    }
-
     public void checkAndInsertDefaultData(SQLiteDatabase db, String memberId) {
         // 該当する MEMBER_ID のレコードが存在するかを確認
         Cursor cursor = null;
