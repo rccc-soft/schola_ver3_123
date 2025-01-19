@@ -68,6 +68,10 @@
         <activity android:name=".BuyCheck" />
         <activity android:name=".Setting" />
         <activity android:name=".Rule" />
+        <activity android:name=".SalesTransfer" />
+        <activity android:name=".SalesTransferCheck" />
+        <activity android:name=".SalesTransferSuccess" />
+        <activity android:name=".CreditSetting" />
     </application>
 
 </manifest>
