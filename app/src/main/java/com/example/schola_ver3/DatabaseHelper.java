@@ -111,6 +111,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                     "FOREIGN KEY (" + COLUMN_MEMBER_ID + ") REFERENCES " + TABLE_MEMBERS + "(" + COLUMN_MEMBER_ID + ")" + // 外部キー
                     ");";
 
+
+
     public DatabaseHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
     }
