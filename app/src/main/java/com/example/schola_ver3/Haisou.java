@@ -8,8 +8,6 @@ import android.widget.Button;
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.example.schola_ver3.MyPage;
-
 public class Haisou extends AppCompatActivity implements View.OnClickListener {
 
     private Button finish;
