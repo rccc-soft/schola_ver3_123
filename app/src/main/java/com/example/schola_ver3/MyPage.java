@@ -17,9 +17,6 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
-import com.example.schola_ver3.EvaluationView;
-import com.example.schola_ver3.R;
-
 import java.util.List;
 
 public class MyPage extends AppCompatActivity implements View.OnClickListener{
@@ -195,13 +192,13 @@ public class MyPage extends AppCompatActivity implements View.OnClickListener{
 //            Intent intent = new Intent(this, .class);
 //            startActivity(intent);
         } else if (id == R.id.salestransfer) {
-            Intent intent = new Intent(this, SalesTransfer.class);
+            Intent intent = new Intent(this, AccountInfomation.class);
             startActivity(intent);
         } else if (id == R.id.faqbtn) {
 //            Intent intent = new Intent(this, .class);
 //            startActivity(intent);
         } else if (id == R.id.logoutbtn) {
-            Intent intent = new Intent(this, Logout.class);
+            Intent intent = new Intent(this, Logoutsub.class);
             startActivity(intent);
         } else if (id == R.id.settingbtn) {
             Intent intent = new Intent(this, Setting.class);

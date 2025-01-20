@@ -1,5 +1,6 @@
 package com.example.schola_ver3;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -17,7 +18,7 @@ public class Logout extends AppCompatActivity implements View.OnClickListener{
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
 
-        setContentView(R.layout.logout);
+        setContentView(R.layout.activity_logout);
 
         logoutYesButton = findViewById(R.id.logoutYesButton);
         logoutYesButton.setOnClickListener(this);
@@ -33,7 +34,10 @@ public class Logout extends AppCompatActivity implements View.OnClickListener{
             startActivity(intent);
         } else if (v.getId() == R.id.logoutYesButton) {
             //ここにログアウト処理を追加する
-
+            SharedPreferences sharedPreferences = getSharedPreferences("UserPrefs", MODE_PRIVATE);
+            SharedPreferences.Editor editor = sharedPreferences.edit();
+            editor.remove("user_id");
+            editor.apply();
             //ログイン画面へ
             Intent intent = new Intent(getApplication(), Login.class);
             startActivity(intent);
