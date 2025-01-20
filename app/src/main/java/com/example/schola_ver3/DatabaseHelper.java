@@ -418,11 +418,4 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         Log.d("DatabaseHelper", "テストデータを配送先テーブルに挿入しました。");
     }
 
-    //  会員者情報削除のデータベース追加項目
-    public boolean deleteMember(String memberId) {
-        SQLiteDatabase db = this.getWritableDatabase();
-        int rowsDeleted = db.delete(TABLE_MEMBERS, COLUMN_MEMBER_ID + " = ?", new String[]{memberId});
-        return rowsDeleted > 0;
-    }
-
 }
