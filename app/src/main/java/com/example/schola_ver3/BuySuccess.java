@@ -7,8 +7,6 @@ import android.widget.Button;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.example.korekore.R;
-
 public class BuySuccess extends AppCompatActivity {
 
     @Override

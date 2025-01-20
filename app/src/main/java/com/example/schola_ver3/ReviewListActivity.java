@@ -59,7 +59,7 @@ public class ReviewListActivity extends AppCompatActivity {
         buttonBackToMain.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(ReviewListActivity.this, MainActivity_egu.class);
+                Intent intent = new Intent(ReviewListActivity.this, MyPage.class);
                 intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
                 startActivity(intent);
                 finish();

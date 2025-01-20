@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -13,6 +14,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 public class ProductSearch extends AppCompatActivity implements View.OnClickListener {
     private Button searchbtn;
+    private ImageButton backButton;
     private EditText searchEditText;
 
     @Override
@@ -25,18 +27,24 @@ public class ProductSearch extends AppCompatActivity implements View.OnClickList
     }
 
     private void initializeViews() {
+        backButton = findViewById(R.id.backButton);
         searchEditText = findViewById(R.id.searchEditText);
         searchbtn = findViewById(R.id.searchbtn);
     }
 
     private void setupClickListeners() {
         if (searchbtn != null) searchbtn.setOnClickListener(this);
+        if (backButton != null) backButton.setOnClickListener(this);
     }
 
     @Override
     public void onClick(View v) {
         if (v.getId() == R.id.searchbtn) {
             performSearch();
+        } else if (v.getId() == R.id.backButton) {
+//            Intent intent = new Intent(this, HomePage.class);
+//            startActivity(intent);
+            finish();
         }
     }
 

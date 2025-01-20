@@ -28,7 +28,7 @@
         android:layout_gravity="center"
         android:layout_marginTop="-50dp"
         android:gravity="center_horizontal"
-        android:text="出品成功画面!"
+        android:text="出品が完了しました"
         android:textColor="#79747E"
         android:textSize="30sp"
         android:textStyle="bold" />

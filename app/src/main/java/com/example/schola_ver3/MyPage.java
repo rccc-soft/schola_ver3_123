@@ -24,7 +24,7 @@ public class MyPage extends AppCompatActivity implements View.OnClickListener{
     private ConstraintLayout constraintLayout;
 
     // ImageButtonとして宣言するビュー
-    private ImageButton imageView; // バックボタン
+    private ImageButton backbtn; // バックボタン
     private ImageButton homebtn;
     private ImageButton searchbtn;
     private ImageButton exhibitbtn;
@@ -66,8 +66,8 @@ public class MyPage extends AppCompatActivity implements View.OnClickListener{
         constraintLayout.setOnClickListener(this);
 
         // ImageButtonの初期化とリスナー設定
-        imageView = findViewById(R.id.imageView);
-        imageView.setOnClickListener(this);
+        backbtn = findViewById(R.id.backbtn);
+        backbtn.setOnClickListener(this);
 
         homebtn = findViewById(R.id.homebtn);
         homebtn.setOnClickListener(this);
@@ -167,8 +167,8 @@ public class MyPage extends AppCompatActivity implements View.OnClickListener{
     @Override
     public void onClick(View v) {
         int id = v.getId();
-        if (id == R.id.imageView){
-            Intent intent = new Intent(this, MainActivity_egu.class);
+        if (id == R.id.backbtn){
+            Intent intent = new Intent(this, HomePage.class);
             startActivity(intent);
         } else if (id == R.id.homebtn) {
             Intent intent = new Intent(this, HomePage.class);
@@ -207,8 +207,6 @@ public class MyPage extends AppCompatActivity implements View.OnClickListener{
             Intent intent = new Intent(this, ReviewListActivity.class);
             startActivity(intent);
         }
-        // バックボタンの動作を定義
-//        finish(); // 例: アクティビティを終了
     }
 
     /**

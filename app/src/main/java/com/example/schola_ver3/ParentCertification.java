@@ -14,7 +14,6 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.example.korekore.R;
 
 public class ParentCertification extends AppCompatActivity {
 
@@ -22,11 +21,15 @@ public class ParentCertification extends AppCompatActivity {
     private Button decideButton;
     private ImageButton backButton;
     private String memberId; // 保持する会員者ID
+    private String productId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_parent_certification); // レイアウトファイルを設定
+
+        Intent intent = getIntent();
+        productId = intent.getStringExtra("商品ID");
 
         // SharedPreferences から会員者IDを取得
         SharedPreferences sharedPreferences = getSharedPreferences("UserPrefs", MODE_PRIVATE);
@@ -81,7 +84,8 @@ public class ParentCertification extends AppCompatActivity {
                 if (dbHelper.validateParentCredentials(userId, password)) {
                     // 条件が満たされた場合、Login.javaに遷移
                     Log.d("ParentCertification", "Validation successful. Proceeding to Login activity.");
-                    Intent intent = new Intent(ParentCertification.this, Login.class);
+                    Intent intent = new Intent(ParentCertification.this, Buy.class);
+                    intent.putExtra("商品ID", productId);
                     startActivity(intent);
                     finish(); // 現在の画面を閉じる
                 } else {

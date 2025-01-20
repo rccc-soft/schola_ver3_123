@@ -13,6 +13,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 public class Setting extends AppCompatActivity implements View.OnClickListener {
 
+    private ImageButton backButton;
     private ImageButton memberInfoButton;
     private ImageButton creditInfoButton;
     private ImageButton shippingInfoButton;
@@ -24,6 +25,9 @@ public class Setting extends AppCompatActivity implements View.OnClickListener {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_setting);
+
+        backButton = findViewById(R.id.backButton);
+        backButton.setOnClickListener(this);
 
         memberInfoButton = findViewById(R.id.memberInfoButton);
         memberInfoButton.setOnClickListener(this);
@@ -42,7 +46,11 @@ public class Setting extends AppCompatActivity implements View.OnClickListener {
 
     @Override
     public void onClick(View v) {
-        if (v.getId() == R.id.memberInfoButton) {
+        if (v.getId() == R.id.backButton) {
+            //マイページへ
+            Intent intent = new Intent(getApplication(), MyPage.class);
+            startActivity(intent);
+        } else if (v.getId() == R.id.memberInfoButton) {
             //会員者情報閲覧画面へ
             Intent intent = new Intent(getApplication(), MemberView.class);
             startActivity(intent);
@@ -50,10 +58,10 @@ public class Setting extends AppCompatActivity implements View.OnClickListener {
             //決済情報設定画面へ
             Intent intent = new Intent(getApplication(), CreditSetting.class);
             startActivity(intent);
-//        } else if (v.getId() == R.id.shippingInfoButton) {
-//            //配送先設定画面へ
-//            Intent intent = new Intent(getApplication(), ShippingDBCheck.class);
-//            startActivity(intent);
+        } else if (v.getId() == R.id.shippingInfoButton) {
+            //配送先設定画面へ
+            Intent intent = new Intent(getApplication(), ShippingRegistration.class);
+            startActivity(intent);
           } else if (v.getId() == R.id.memberDeleteButton) {
           //会員者削除画面へ
               Intent intent = new Intent(getApplication(), MemberDelete.class);

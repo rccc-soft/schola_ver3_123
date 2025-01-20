@@ -13,6 +13,7 @@ import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.Toast;
@@ -32,6 +33,7 @@ public class ExhibitEdit extends AppCompatActivity implements View.OnClickListen
     private Button exhibitcancelbtn;
     private Button tradecancelbtn;
     private Button changeImageBtn;
+    private ImageButton backButton;
     private EditText productNameEditText, productDescriptionEditText, productPriceEditText;
     private ImageView productImageView;
     private Spinner categorySpinner, deliveryMethodSpinner, regionSpinner;
@@ -71,6 +73,9 @@ public class ExhibitEdit extends AppCompatActivity implements View.OnClickListen
     }
 
     private void initializeViews() {
+        backButton = findViewById(R.id.backButton);
+        backButton.setOnClickListener(this);
+
         savebtn = findViewById(R.id.savebtn);
         savebtn.setOnClickListener(this);
 
@@ -176,6 +181,9 @@ public class ExhibitEdit extends AppCompatActivity implements View.OnClickListen
             // トレードキャンセルの処理を実装
         } else if (v.getId() == R.id.changeImageBtn) {
             imagePickerLauncher.launch("image/*");
+        } else if (v.getId() == R.id.backButton) {
+            Intent intent = new Intent(this, ExhibitList.class);
+            startActivity(intent);
         }
     }
 

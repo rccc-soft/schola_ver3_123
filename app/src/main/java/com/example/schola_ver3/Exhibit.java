@@ -135,6 +135,8 @@ public class Exhibit extends AppCompatActivity implements View.OnClickListener {
         } else if (v.getId() == R.id.addpicture) {
             imagePickerLauncher.launch("image/*");
         } else if (v.getId() == R.id.backButton) {
+//            Intent intent = new Intent(this, HomePage.class);
+//            startActivity(intent);
             finish();
         }
     }

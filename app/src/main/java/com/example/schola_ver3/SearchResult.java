@@ -10,6 +10,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
 import android.widget.ImageView;
@@ -26,6 +27,7 @@ public class SearchResult extends AppCompatActivity implements View.OnClickListe
     private ListView resultsListView;
     private ProductDatabaseHelper dbHelper;
     private EditText editTextText;
+    private ImageButton backButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,6 +40,9 @@ public class SearchResult extends AppCompatActivity implements View.OnClickListe
 
         dbHelper = new ProductDatabaseHelper(this);
         resultsListView = findViewById(R.id.resultsListView);
+
+        backButton = findViewById(R.id.backButton);
+        backButton.setOnClickListener(this);
 
         Intent intent = getIntent();
         String query = intent.getStringExtra("SEARCH_QUERY");
@@ -130,6 +135,8 @@ public class SearchResult extends AppCompatActivity implements View.OnClickListe
     public void onClick(View v) {
         Intent intent = null;
         if (v.getId() == R.id.editTextText) {
+            intent = new Intent(getApplication(), ProductSearch.class);
+        } else if(v.getId() == R.id.backButton) {
             intent = new Intent(getApplication(), ProductSearch.class);
         }
         if (intent != null) {

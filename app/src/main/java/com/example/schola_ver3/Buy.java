@@ -7,6 +7,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.RadioButton;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -14,7 +15,7 @@ import android.util.Log;
 import androidx.appcompat.app.AppCompatActivity;
 import android.widget.ArrayAdapter;
 
-public class Buy extends AppCompatActivity {
+public class Buy extends AppCompatActivity implements View.OnClickListener{
     private static final String TAG = "Buy";
     private static final int REQUEST_BUY_CHECK = 1;
 
@@ -26,11 +27,15 @@ public class Buy extends AppCompatActivity {
     private Button buyButton;
     private ProductDatabaseHelper dbHelper;
     private String productId;
+    private ImageButton imageButton2;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_buy);
+
+        imageButton2 = findViewById(R.id.imageButton2);
+        imageButton2.setOnClickListener(this);
 
         initializeViews();
         dbHelper = new ProductDatabaseHelper(this);
@@ -124,6 +129,15 @@ public class Buy extends AppCompatActivity {
             } else if (resultCode == RESULT_CANCELED) {
                 // ユーザーが購入をキャンセルした場合の処理
             }
+        }
+    }
+
+    @Override
+    public void onClick(View v) {
+        if (v.getId() == R.id.imageButton2) {
+            // 戻るボタンの処理
+            Intent intent = new Intent(this, ProductDetail.class);
+            startActivity(intent);
         }
     }
 }

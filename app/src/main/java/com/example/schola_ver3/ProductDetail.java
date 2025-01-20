@@ -198,7 +198,7 @@ public class ProductDetail extends AppCompatActivity implements View.OnClickList
                 intent.putExtra("商品ID", productId);
                 startActivity(intent);
             } else {
-                Intent intent = new Intent(this, Buy.class);
+                Intent intent = new Intent(this, ParentCertification.class);
                 intent.putExtra("商品ID", productId);
                 startActivity(intent);
             }
