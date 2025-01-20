@@ -130,9 +130,19 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         }
     }
 
-    // 配送先情報を挿入するメソッド
+    // 配送先情報を挿入・更新するメソッド
     public boolean insertDeliveryAddress(String deliveryAddressId, String memberId, String memberName, String postalCode, String address, String phoneNumber) {
         SQLiteDatabase db = this.getWritableDatabase();
+
+        // 既に同じ memberId が存在するか確認
+        String checkQuery = "SELECT 1 FROM " + TABLE_DELIVERY_ADDRESS + " WHERE " + COLUMN_MEMBER_ID + " = ?";
+        Cursor cursor = db.rawQuery(checkQuery, new String[]{memberId});
+
+        boolean isExisting = cursor != null && cursor.moveToFirst();
+        if (cursor != null) {
+            cursor.close();
+        }
+
         ContentValues values = new ContentValues();
         values.put(COLUMN_DELIVERY_ADDRESS_ID, deliveryAddressId);
         values.put(COLUMN_MEMBER_ID, memberId);
@@ -141,8 +151,18 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         values.put(COLUMN_ADDRESS, address);
         values.put(COLUMN_PHONE_NUMBER, phoneNumber);
 
-        long result = db.insert(TABLE_DELIVERY_ADDRESS, null, values);
-        return result != -1;
+        if (isExisting) {
+            // 存在する場合は更新
+            int rowsUpdated = db.update(TABLE_DELIVERY_ADDRESS, values, COLUMN_MEMBER_ID + " = ?", new String[]{memberId});
+            return rowsUpdated > 0;
+        } else {
+            // 存在しない場合は挿入
+            long result = db.insert(TABLE_DELIVERY_ADDRESS, null, values);
+            return result != -1;
+        }
+
+//        long result = db.insert(TABLE_DELIVERY_ADDRESS, null, values);
+//        return result != -1;
     }
 
     // 全ての配送先を取得するメソッド

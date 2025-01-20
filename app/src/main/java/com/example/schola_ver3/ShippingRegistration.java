@@ -20,7 +20,10 @@ public class ShippingRegistration extends AppCompatActivity implements View.OnCl
     private EditText userid, username, ubinnumber, adress, telnumber;
     private Button registerButton;
     private ImageButton backButton;
-    private TourokuDatabaseHelper dbHelper;
+//    private TourokuDatabaseHelper dbHelper;
+    private DatabaseHelper dbHelper;
+
+    private String deliveryAddressId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,16 +45,22 @@ public class ShippingRegistration extends AppCompatActivity implements View.OnCl
 
         if (!userId.isEmpty()) {
             // DatabaseHelperインスタンス作成
-            dbHelper = new TourokuDatabaseHelper(this);
+//            dbHelper = new TourokuDatabaseHelper(this);
+            dbHelper = new DatabaseHelper(this);
             Cursor cursor = dbHelper.getMemberInfo(userId);
 
             if (cursor != null && cursor.moveToFirst()) {
                 // 各カラムのインデックスを取得
-                int useridIndex = cursor.getColumnIndex(TourokuDatabaseHelper.COLUMN_USER_ID);
-                int usernameIndex = cursor.getColumnIndex(TourokuDatabaseHelper.COLUMN_NAME);
-                int ubinnumberIndex = cursor.getColumnIndex(TourokuDatabaseHelper.COLUMN_UBIN_NUMBER);
-                int adressIndex = cursor.getColumnIndex(TourokuDatabaseHelper.COLUMN_ADRESS);
-                int telnumberIndex = cursor.getColumnIndex(TourokuDatabaseHelper.COLUMN_TEL_NUMBER);
+//                int useridIndex = cursor.getColumnIndex(TourokuDatabaseHelper.COLUMN_USER_ID);
+//                int usernameIndex = cursor.getColumnIndex(TourokuDatabaseHelper.COLUMN_NAME);
+//                int ubinnumberIndex = cursor.getColumnIndex(TourokuDatabaseHelper.COLUMN_UBIN_NUMBER);
+//                int adressIndex = cursor.getColumnIndex(TourokuDatabaseHelper.COLUMN_ADRESS);
+//                int telnumberIndex = cursor.getColumnIndex(TourokuDatabaseHelper.COLUMN_TEL_NUMBER);
+                int useridIndex = cursor.getColumnIndex(DatabaseHelper.COLUMN_MEMBER_ID);
+                int usernameIndex = cursor.getColumnIndex(DatabaseHelper.COLUMN_MEMBER_NAME);
+                int ubinnumberIndex = cursor.getColumnIndex(DatabaseHelper.COLUMN_POSTAL_CODE);
+                int adressIndex = cursor.getColumnIndex(DatabaseHelper.COLUMN_ADDRESS);
+                int telnumberIndex = cursor.getColumnIndex(DatabaseHelper.COLUMN_PHONE_NUMBER);
 
                 // データを取得して EditText にセット
                 if (useridIndex != -1) {
@@ -170,6 +179,10 @@ public class ShippingRegistration extends AppCompatActivity implements View.OnCl
     public void onClick(View v) {
         if (v.getId() == R.id.registerButton) {
             try {
+                // 配送先IDを生成
+                deliveryAddressId = dbHelper.generateDeliveryAddressId();
+                Log.d("ShippingRegistration", "Generated Delivery Address ID: " + deliveryAddressId);
+
                 // 入力された内容を取得
                 String useridText = userid.getText().toString().trim();
                 String usernameText = username.getText().toString().trim();
@@ -178,10 +191,13 @@ public class ShippingRegistration extends AppCompatActivity implements View.OnCl
                 String telnumberText = telnumber.getText().toString().trim();
 
                 // DatabaseHelperインスタンスを作成
-                dbHelper = new TourokuDatabaseHelper(this);
+//                dbHelper = new TourokuDatabaseHelper(this);
+                dbHelper = new DatabaseHelper(this);
 
                 // 新しい会員情報をデータベースに登録
-                boolean isRegistered = dbHelper.addDeliveryAdress(useridText, usernameText, ubinnumberText, adressText,
+//                boolean isRegistered = dbHelper.addDeliveryAdress(useridText, usernameText, ubinnumberText, adressText,
+//                        telnumberText);
+                boolean isRegistered = dbHelper.insertDeliveryAddress(deliveryAddressId, useridText, usernameText, ubinnumberText, adressText,
                         telnumberText);
 
                 if (isRegistered) {
