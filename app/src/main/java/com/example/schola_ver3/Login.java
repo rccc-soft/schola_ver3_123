@@ -10,7 +10,7 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-//import com.example.korekore.R;
+import com.example.korekore.R;
 
 public class Login extends AppCompatActivity implements View.OnClickListener {
 
@@ -62,11 +62,11 @@ public class Login extends AppCompatActivity implements View.OnClickListener {
                     SharedPreferences.Editor editor = sharedPreferences.edit();
                     editor.putString("user_id", userId);  // 会員者IDを保存
                     editor.apply();
-                    Intent intent = new Intent(this, MemberView.class);
+                    Intent intent = new Intent(this, ParentCertification.class);
                     startActivity(intent);
                 } else {
                     // ログイン失敗の場合、エラーメッセージを表示
-                    Toast.makeText(this, "Invalid user ID or password", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(this, "パスワードが一致しません", Toast.LENGTH_SHORT).show();
                 }
             } else {
                 // 入力が不足している場合、エラーメッセージを表示
@@ -77,8 +77,8 @@ public class Login extends AppCompatActivity implements View.OnClickListener {
             Intent intent = new Intent(this, Rule.class);
             startActivity(intent);
         } else if (v.getId() == R.id.deliveryButton) {
-            // 配送業者ボタンが押された時の処理（ホーム画面へ遷移）
-            Intent intent = new Intent(this, HomePage.class);
+            // 配送業者ボタンが押された時の処理
+            Intent intent = new Intent(this, LoginH.class);
             startActivity(intent);
         }
     }
