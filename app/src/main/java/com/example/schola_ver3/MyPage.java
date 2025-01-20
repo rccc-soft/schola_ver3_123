@@ -195,9 +195,8 @@ public class MyPage extends AppCompatActivity implements View.OnClickListener{
 //            Intent intent = new Intent(this, .class);
 //            startActivity(intent);
         } else if (id == R.id.salestransfer) {
-
-//            Intent intent = new Intent(this, .class);
-//            startActivity(intent);
+            Intent intent = new Intent(this, SalesTransfer.class);
+            startActivity(intent);
         } else if (id == R.id.faqbtn) {
 //            Intent intent = new Intent(this, .class);
 //            startActivity(intent);

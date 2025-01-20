@@ -14,11 +14,17 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.Toast;
 
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AppCompatActivity;
 
 //import com.example.  ;
 
 public class EvaluationBuy extends AppCompatActivity implements View.OnClickListener {
+
+    private static final int REQUEST_CODE_CONFIRMATION = 1;
+    private ActivityResultLauncher<Intent> confirmationLauncher;
+    private String tempMessage;
 
     private ImageButton backButton;
     private Button veryGoodButton, goodButton, normalButton, badButton, veryBadButton, sendButton;
@@ -90,6 +96,26 @@ public class EvaluationBuy extends AppCompatActivity implements View.OnClickList
         badButton.setOnClickListener(this);
         veryBadButton.setOnClickListener(this);
         sendButton.setOnClickListener(this);
+
+        setupConfirmationLauncher();
+    }
+
+    private void setupConfirmationLauncher() {
+        confirmationLauncher = registerForActivityResult(
+                new ActivityResultContracts.StartActivityForResult(),
+                result -> {
+                    if (result.getResultCode() == RESULT_OK) {
+                        // ユーザーが確認した場合
+//                        submitReview();
+//                        Intent intent = new Intent(getApplication(), SalesTransferSuccess.class);
+//                        startActivity(intent);
+                        saveReviewAndNavigateToSuccess();
+                    } else if (result.getResultCode() == RESULT_CANCELED) {
+                        // ユーザーがキャンセルした場合
+                        // 何もしない（現在の画面にとどまる）
+                    }
+                }
+        );
     }
 
     @Override
@@ -114,10 +140,11 @@ public class EvaluationBuy extends AppCompatActivity implements View.OnClickList
             reviewScore = 1;
             showToast("評価: 最悪");
         } else if (id == R.id.editButton) {
-            submitReview();
-            // Intentの起動は必要に応じて変更
-            Intent intent = new Intent(getApplication(), HomePage.class);
-            startActivity(intent);
+//            submitReview();
+//            // Intentの起動は必要に応じて変更
+//            Intent intent = new Intent(getApplication(), EvaluationBuySend.class);
+//            startActivity(intent);
+            prepareReviewSubmission();
         }
     }
 
@@ -125,34 +152,32 @@ public class EvaluationBuy extends AppCompatActivity implements View.OnClickList
         Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
     }
 
-    private void submitReview() {
-        String message = messageInput.getText().toString();
+    private void prepareReviewSubmission() {
+        tempMessage = messageInput.getText().toString();
 
         if (reviewScore == 0) {
             showToast("評価を選択してください");
             return;
         }
 
-        if (message.isEmpty()) {
+        if (tempMessage.isEmpty()) {
             showToast("メッセージを入力してください");
             return;
         }
 
-        Log.d("EvaluationSell", "Submitting review: buyerId=" + buyerId + ", sellerId=" + sellerId + ", score=" + reviewScore + ", message=" + message);
+        // 確認画面を表示
+        Intent confirmIntent = new Intent(this, EvaluationBuySend.class);
+        confirmationLauncher.launch(confirmIntent);
+    }
 
-        if (sellerId == null || sellerId.isEmpty()) {
-            showToast("出品者IDが取得できません");
-            return;
-        }
-
-
+    private void saveReviewAndNavigateToSuccess() {
         try {
-            System.out.println("購入者ID: " + buyerId);
-            System.out.println("出品者ID: " + sellerId);
-            System.out.println("レビュースコア: " + reviewScore);
-            reviewManager.addReview(buyerId, sellerId, reviewScore, message);
+            reviewManager.addReview(buyerId, sellerId, reviewScore, tempMessage);
             showToast("レビューが送信されました");
-            messageInput.setText("");
+
+            // ホーム画面に遷移
+            Intent intent = new Intent(this, EvaluationBuySuccess.class);
+            startActivity(intent);
             finish();
         } catch (Exception e) {
             showToast("レビューの送信に失敗しました: " + e.getMessage());

@@ -46,10 +46,10 @@ public class Setting extends AppCompatActivity implements View.OnClickListener {
             //会員者情報閲覧画面へ
             Intent intent = new Intent(getApplication(), MemberView.class);
             startActivity(intent);
-//        } else if (v.getId() == R.id.creditInfoButton) {
-//            //決済情報設定画面へ
-//            Intent intent = new Intent(getApplication(), CreditDBCheck.class);
-//            startActivity(intent);
+        } else if (v.getId() == R.id.creditInfoButton) {
+            //決済情報設定画面へ
+            Intent intent = new Intent(getApplication(), CreditSetting.class);
+            startActivity(intent);
 //        } else if (v.getId() == R.id.shippingInfoButton) {
 //            //配送先設定画面へ
 //            Intent intent = new Intent(getApplication(), ShippingDBCheck.class);

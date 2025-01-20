@@ -7,7 +7,7 @@ import android.widget.Button;
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
 
-//import com.example.korekore.R;
+//import com.example.  ;
 
 //EvaluationSellから
 public class EvaluationBuySuccess extends AppCompatActivity implements View.OnClickListener{
@@ -18,14 +18,18 @@ public class EvaluationBuySuccess extends AppCompatActivity implements View.OnCl
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
-        setContentView(R.layout.activity_seller_evaluation_confirmation0);
-        Intent intent = new Intent(getApplication(),EvaluationSell.class);
-        startActivity(intent);
+        setContentView(R.layout.activity_buyer_complete);
 
+        completebtn = findViewById(R.id.completebtn);
+        completebtn.setOnClickListener(this);
     }
 
     @Override
     public void onClick(View v) {
-        //ホーム画面へ
+        //マイページ画面へ
+        if (v.getId() == R.id.completebtn) {
+            Intent intent = new Intent(this, MyPage.class);
+            startActivity(intent);
+        }
     }
 }

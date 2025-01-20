@@ -159,7 +159,7 @@
             app:layout_constraintTop_toTopOf="parent">
 
             <Button
-                android:id="@+id/salestransferbtn"
+                android:id="@+id/exhibitlistbtn"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:background="@android:color/transparent"
@@ -170,7 +170,7 @@
                 android:textStyle="bold" />
 
             <Button
-                android:id="@+id/purchasedbtn2"
+                android:id="@+id/purchasedbtn"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@android:color/transparent"
@@ -192,7 +192,7 @@
                 android:textStyle="bold" />
 
             <Button
-                android:id="@+id/SalesTransfer"
+                android:id="@+id/salestransfer"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@android:color/transparent"
@@ -256,7 +256,7 @@
             app:srcCompat="@drawable/home_button"/>
 
         <ImageButton
-            android:id="@+id/exhibitedbtn"
+            android:id="@+id/searchbtn"
             android:layout_width="0dp"
             android:layout_height="80dp"
             android:layout_weight="1"
@@ -267,7 +267,7 @@
 
         <ImageButton
             android:scaleType="centerInside"
-            android:id="@+id/purchasedbtn"
+            android:id="@+id/exhibitbtn"
             android:layout_width="0dp"
             android:layout_height="80dp"
             android:layout_weight="1"

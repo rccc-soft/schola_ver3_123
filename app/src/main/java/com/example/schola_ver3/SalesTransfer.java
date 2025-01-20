@@ -143,8 +143,8 @@ public class SalesTransfer extends AppCompatActivity implements View.OnClickList
     @Override
     public void onClick(View v) {
         if (v.getId() == R.id.backButton) {
-            Intent intent = new Intent(getApplication(), AccountInformation.class);
-            startActivity(intent);
+//            Intent intent = new Intent(getApplication(), AccountInformation.class);
+//            startActivity(intent);
         } else if (v.getId() == R.id.transferButton) {
             // 記入漏れがないかの処理
             String transferAmountStr = editTextTransferAmount.getText().toString();

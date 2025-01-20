@@ -7,7 +7,7 @@ import android.widget.Button;
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
 
-//import com.example.korekore.R;
+//import com.example.  ;
 
 //EvaluationSellから
 public class EvaluationBuySend extends AppCompatActivity implements View.OnClickListener{
@@ -29,13 +29,13 @@ public class EvaluationBuySend extends AppCompatActivity implements View.OnClick
     @Override
     public void onClick(View v) {
         if (v.getId() == R.id.confirmButton) {
-            //
-            Intent intent = new Intent(getApplication(),EvaluationBuySuccess.class);
-            startActivity(intent);
+            // 結果をセットして終了
+            setResult(RESULT_OK);
+            finish();
         } else if (v.getId() == R.id.cancelButton) {
             // 結果をセットして終了
-            Intent intent = new Intent(getApplication(),EvaluationBuy.class);
-            startActivity(intent);
+            setResult(RESULT_CANCELED);
+            finish();
         }
     }
 }
