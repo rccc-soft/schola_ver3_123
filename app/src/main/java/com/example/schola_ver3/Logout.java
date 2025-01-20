@@ -1,21 +1,11 @@
 package com.example.schola_ver3;
-import android.content.ContentValues;
-import android.content.Context;
 import android.content.Intent;
-import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
-import android.database.sqlite.SQLiteException;
-import android.graphics.Color;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
-
-import com.example.schola_ver3.Login;
-import com.example.schola_ver3.MyPage;
 
 //Settingから
 public class Logout extends AppCompatActivity implements View.OnClickListener{
