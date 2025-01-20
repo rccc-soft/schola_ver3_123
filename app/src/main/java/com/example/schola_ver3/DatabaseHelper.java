@@ -1,4 +1,4 @@
-package com.example.schola_ver3;
+package com.example.korekore;
 
 import android.content.ContentValues;
 import android.content.Context;
