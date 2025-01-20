@@ -173,6 +173,13 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     }
 
 
+    public boolean deleteMember(String memberId) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        int rowsDeleted = db.delete(TABLE_MEMBERS, COLUMN_MEMBER_ID + " = ?", new String[]{memberId});
+        return rowsDeleted > 0;
+    }
+
+
 
     // データを挿入や更新するためのメソッドを追加（例: insertMemberメソッド）
     public boolean validateLoginByUserId(String userId, String password) {
