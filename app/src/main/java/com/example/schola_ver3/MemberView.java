@@ -11,7 +11,7 @@ import android.widget.ImageButton;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-;
+import com.example.korekore.R;
 
 public class MemberView extends AppCompatActivity {
 
@@ -51,12 +51,14 @@ public class MemberView extends AppCompatActivity {
                     String memberId = cursor.getString(memberIdIndex);
                     EditText memberIdEditText = findViewById(R.id.userid);
                     memberIdEditText.setText(memberId);
+                    memberIdEditText.setEnabled(false); // 編集不可にする
                 }
 
                 if (passwordIndex != -1) {
                     String password = cursor.getString(passwordIndex);
                     EditText passwordEditText = findViewById(R.id.password);
                     passwordEditText.setText(password);
+                    passwordEditText.setEnabled(false); // 編集不可にする
                 }
 
                 // 他のフィールドも同様に設定
@@ -64,48 +66,56 @@ public class MemberView extends AppCompatActivity {
                     String username = cursor.getString(usernameIndex);
                     EditText usernameEditText = findViewById(R.id.username);
                     usernameEditText.setText(username);
+                    usernameEditText.setEnabled(false); // 編集不可にする
                 }
 
                 if (kaiinnameIndex != -1) {
                     String kaiinname = cursor.getString(kaiinnameIndex);
                     EditText kaiinnameEditText = findViewById(R.id.kaiinname);
                     kaiinnameEditText.setText(kaiinname);
+                    kaiinnameEditText.setEnabled(false); // 編集不可にする
                 }
 
                 if (huriganaIndex != -1) {
                     String hurigana = cursor.getString(huriganaIndex);
                     EditText huriganaEditText = findViewById(R.id.hurigana);
                     huriganaEditText.setText(hurigana);
+                    huriganaEditText.setEnabled(false); // 編集不可にする
                 }
 
                 if (birthdayIndex != -1) {
                     String birthday = cursor.getString(birthdayIndex);
                     EditText birthdayEditText = findViewById(R.id.birthday);
                     birthdayEditText.setText(birthday);
+                    birthdayEditText.setEnabled(false); // 編集不可にする
                 }
 
                 if (schoolIndex != -1) {
                     String school = cursor.getString(schoolIndex);
                     EditText schoolEditText = findViewById(R.id.school);
                     schoolEditText.setText(school);
+                    schoolEditText.setEnabled(false); // 編集不可にする
                 }
 
                 if (emailIndex != -1) {
                     String email = cursor.getString(emailIndex);
                     EditText emailEditText = findViewById(R.id.email);
                     emailEditText.setText(email);
+                    emailEditText.setEnabled(false); // 編集不可にする
                 }
 
                 if (phoneIndex != -1) {
                     String phone = cursor.getString(phoneIndex);
                     EditText phoneEditText = findViewById(R.id.phone);
                     phoneEditText.setText(phone);
+                    phoneEditText.setEnabled(false); // 編集不可にする
                 }
 
                 if (profileMessageIndex != -1) {
                     String profileMessage = cursor.getString(profileMessageIndex);
                     EditText profileMessageEditText = findViewById(R.id.profileMessage);
                     profileMessageEditText.setText(profileMessage);
+                    profileMessageEditText.setEnabled(false); // 編集不可にする
                 }
 
                 cursor.close(); // Cursorを閉じる

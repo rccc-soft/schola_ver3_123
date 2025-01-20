@@ -14,7 +14,7 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-;
+import com.example.korekore.R;
 
 public class MemberUpdate extends AppCompatActivity {
 
