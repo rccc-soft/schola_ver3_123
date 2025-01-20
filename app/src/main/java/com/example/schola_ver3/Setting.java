@@ -54,10 +54,10 @@ public class Setting extends AppCompatActivity implements View.OnClickListener {
 //            //配送先設定画面へ
 //            Intent intent = new Intent(getApplication(), ShippingDBCheck.class);
 //            startActivity(intent);
-//        } else if (v.getId() == R.id.memberDeleteButton) {
-//            //会員者削除画面へ
-//            Intent intent = new Intent(getApplication(), MemberDelete.class);
-//            startActivity(intent);
+          } else if (v.getId() == R.id.memberDeleteButton) {
+          //会員者削除画面へ
+              Intent intent = new Intent(getApplication(), MemberDelete.class);
+              startActivity(intent);
         }
     }
 }
