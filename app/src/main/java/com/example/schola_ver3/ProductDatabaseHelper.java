@@ -6,6 +6,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.util.Log;
 
 public class ProductDatabaseHelper extends SQLiteOpenHelper {
     private static final int DATABASE_VERSION = 2;
@@ -67,5 +68,32 @@ public class ProductDatabaseHelper extends SQLiteOpenHelper {
     @Override
     public void onDowngrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         onUpgrade(db, oldVersion, newVersion);
+    }
+
+    // 商品を削除するメソッド
+    public void deleteProductById(String productId) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        try {
+            String whereClause = COLUMN_ID + " = ?";
+            String[] whereArgs = { productId };
+            db.delete(TABLE_NAME, whereClause, whereArgs);  // product_table は商品を格納するテーブル名
+        } catch (Exception e) {
+            Log.e("ProductDatabaseHelper", "Error deleting product with ID: " + productId, e);
+        } finally {
+            db.close();
+        }
+    }
+
+    // 指定された商品IDの出品者IDを取得する
+    public String getSellerIdByProductId(String productId) {
+        SQLiteDatabase db = this.getReadableDatabase();
+        String query = "SELECT " + COLUMN_SELLER_ID + " FROM " + TABLE_NAME + " WHERE " + COLUMN_ID + " = ?";
+        Cursor cursor = db.rawQuery(query, new String[]{productId});
+        String sellerId = null;
+        if (cursor.moveToFirst()) {
+            sellerId = cursor.getString(0); // 出品者IDを取得
+        }
+        cursor.close();
+        return sellerId;
     }
 }
