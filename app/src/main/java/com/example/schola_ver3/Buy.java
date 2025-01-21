@@ -21,11 +21,12 @@ public class Buy extends AppCompatActivity implements View.OnClickListener{
 
     private RadioButton deliverySelectButton;
     private RadioButton handDeliverySelectButton;
-    private Spinner paymentMethodSpinner; // Spinnerを追加
+    private Spinner paymentMethodSpinner;
     private TextView addressTextView;
     private TextView priceTextView;
     private Button buyButton;
     private ProductDatabaseHelper dbHelper;
+    private DatabaseHelper deliveryDbHelper;
     private String productId;
     private ImageButton imageButton2;
 
@@ -39,6 +40,7 @@ public class Buy extends AppCompatActivity implements View.OnClickListener{
 
         initializeViews();
         dbHelper = new ProductDatabaseHelper(this);
+        deliveryDbHelper = new DatabaseHelper(this);
 
         Intent intent = getIntent();
         productId = intent.getStringExtra("商品ID");
@@ -51,14 +53,14 @@ public class Buy extends AppCompatActivity implements View.OnClickListener{
         setDeliveryMethod();
         setAddress();
         setPrice();
-        setupPaymentMethodSpinner(); // Spinnerの設定メソッドを呼び出し
+        setupPaymentMethodSpinner();
         setupBuyButtonListener();
     }
 
     private void initializeViews() {
         deliverySelectButton = findViewById(R.id.deliverySelectButton);
         handDeliverySelectButton = findViewById(R.id.handDeliverySelectButton);
-        paymentMethodSpinner = findViewById(R.id.paymentMethodSpinner); // Spinnerの初期化
+        paymentMethodSpinner = findViewById(R.id.paymentMethodSpinner);
         addressTextView = findViewById(R.id.textView13);
         priceTextView = findViewById(R.id.textView12);
         buyButton = findViewById(R.id.buyButton);
@@ -86,7 +88,23 @@ public class Buy extends AppCompatActivity implements View.OnClickListener{
     private void setAddress() {
         SharedPreferences prefs = getSharedPreferences("UserPrefs", MODE_PRIVATE);
         String userId = prefs.getString("user_id", "");
-        // ここで配送先データベースからユーザーの住所を取得し、addressTextViewにセットする
+
+        Log.d(TAG, "User ID: " + userId);
+
+        Cursor cursor = deliveryDbHelper.getDeliveryAddressByMemberId(userId);
+        if (cursor != null && cursor.moveToFirst()) {
+            String postalCode = cursor.getString(cursor.getColumnIndexOrThrow(DatabaseHelper.COLUMN_POSTAL_CODE));
+            String address = cursor.getString(cursor.getColumnIndexOrThrow(DatabaseHelper.COLUMN_ADDRESS));
+            if (address != null && !address.isEmpty()) {
+                String fullAddress = postalCode + "\n" + address;
+                addressTextView.setText(fullAddress);
+            } else {
+                addressTextView.setText("住所が見つかりません");
+            }
+            cursor.close();
+        } else {
+            addressTextView.setText("住所が見つかりません");
+        }
     }
 
     private void setPrice() {
@@ -109,7 +127,7 @@ public class Buy extends AppCompatActivity implements View.OnClickListener{
 
     private void setupBuyButtonListener() {
         buyButton.setOnClickListener(v -> {
-            String selectedPaymentMethod = paymentMethodSpinner.getSelectedItem().toString(); // 選択された支払い方法を取得
+            String selectedPaymentMethod = paymentMethodSpinner.getSelectedItem().toString();
             Intent intent = new Intent(Buy.this, BuyCheck.class);
             intent.putExtra("paymentMethod", selectedPaymentMethod);
             intent.putExtra("product_id", productId);
@@ -122,7 +140,6 @@ public class Buy extends AppCompatActivity implements View.OnClickListener{
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == REQUEST_BUY_CHECK) {
             if (resultCode == RESULT_OK) {
-                //支払い方法によって画面分岐を作成する
                 Intent intent = new Intent(Buy.this, BuySuccess.class);
                 startActivity(intent);
                 finish();
@@ -135,9 +152,7 @@ public class Buy extends AppCompatActivity implements View.OnClickListener{
     @Override
     public void onClick(View v) {
         if (v.getId() == R.id.imageButton2) {
-            // 戻るボタンの処理
-            Intent intent = new Intent(this, ProductDetail.class);
-            startActivity(intent);
+            finish();
         }
     }
 }

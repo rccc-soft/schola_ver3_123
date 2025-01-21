@@ -2,6 +2,7 @@ package com.example.schola_ver3;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.database.Cursor;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -54,6 +55,9 @@ public class MyPage extends AppCompatActivity implements View.OnClickListener{
     // EvaluationViewのインスタンス
     private EvaluationView evaluationView;
     private int sellerId;
+
+    private TextView usernameTextView;
+    private DatabaseHelper dbHelper;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -120,10 +124,19 @@ public class MyPage extends AppCompatActivity implements View.OnClickListener{
         // EvaluationViewのインスタンス作成
         evaluationView = new EvaluationView(this);
 
+        usernameTextView = findViewById(R.id.textView); // XMLのusernameを表示するTextView
+        dbHelper = new DatabaseHelper(this);
+
         // ユーザーのmemberIDを取得（Intentから取得）
 //        int userMemberId = getIntent().getIntExtra("seller_member_id", 1); // 初期値を1に設定
         SharedPreferences prefs = getSharedPreferences("UserPrefs", MODE_PRIVATE);
         String userMemberId = prefs.getString("user_id", "");
+
+        if (!userMemberId.isEmpty()) {
+            displayUsername(userMemberId);
+        } else {
+            usernameTextView.setText("ユーザー情報が見つかりません");
+        }
 
         if (userMemberId != null) { // 初期値を1に設定しているため、この条件は基本的に常にtrue
             // 評価データを非同期で取得
@@ -162,6 +175,22 @@ public class MyPage extends AppCompatActivity implements View.OnClickListener{
 
         // 必要に応じてデータベースにサンプルデータを追加（テスト用）
         // evaluationView.addSampleData(); // EvaluationViewクラスで実装していない場合はコメントアウト
+    }
+
+    private void displayUsername(String userMemberId) {
+        Cursor cursor = dbHelper.getMemberInfo(userMemberId);
+        if (cursor != null && cursor.moveToFirst()) {
+            int nameColumnIndex = cursor.getColumnIndex(DatabaseHelper.COLUMN_NAME);
+            if (nameColumnIndex != -1) {
+                String username = cursor.getString(nameColumnIndex);
+                usernameTextView.setText(username);
+            } else {
+                usernameTextView.setText("ユーザー名が見つかりません");
+            }
+            cursor.close();
+        } else {
+            usernameTextView.setText("ユーザー情報が見つかりません");
+        }
     }
 
     @Override
