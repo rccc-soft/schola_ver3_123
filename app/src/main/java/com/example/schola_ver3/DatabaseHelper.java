@@ -636,8 +636,114 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         Log.d("DatabaseHelper", "テストデータを配送先テーブルに挿入しました。");
     }
 
+    // 指定された商品IDに関連する購入IDを取得する
+    public int getPurchaseIdByItemId(String itemId) {
+        SQLiteDatabase db = this.getReadableDatabase();
+        String query = "SELECT " + COLUMN_PURCHASE_ID + " FROM " + TABLE_NAME +
+                " WHERE " + COLUMN_ITEM_ID + " = ?";
+        Cursor cursor = db.rawQuery(query, new String[]{itemId});
+        int purchaseId = -1; // デフォルト値（該当なしの場合）
+        if (cursor.moveToFirst()) {
+            purchaseId = cursor.getInt(0); // 該当する購入IDを取得
+        }
+        cursor.close();
+        return purchaseId;
+    }
 
+    // 指定された商品IDのレコードが存在するかを確認
+    public boolean doesItemExist(String itemId) {
+        SQLiteDatabase db = this.getReadableDatabase();
+        String query = "SELECT COUNT(*) FROM " + TABLE_NAME + " WHERE " + COLUMN_ITEM_ID + " = ?";
+        Cursor cursor = db.rawQuery(query, new String[]{itemId});
+        boolean exists = false;
+        if (cursor.moveToFirst()) {
+            exists = cursor.getInt(0) > 0; // レコードが存在するか確認
+        }
+        cursor.close();
+        return exists;
+    }
 
+    // 指定された商品IDの配送状況を取得する
+    public boolean isItemShipped(String itemId) {
+        SQLiteDatabase db = this.getReadableDatabase();
+        String query = "SELECT " + COLUMN_IS_SHIPPED + " FROM " + TABLE_NAME +
+                " WHERE " + COLUMN_ITEM_ID + " = ?";
+        Cursor cursor = db.rawQuery(query, new String[]{itemId});
+        boolean isShipped = false;
+        if (cursor.moveToFirst()) {
+            isShipped = cursor.getInt(0) == 1; // 配送状況を確認
+        }
+        cursor.close();
+        return isShipped;
+    }
+
+    // 出品者評価が済んでいるかを判定する
+    public boolean isSellerRated(int purchaseId) {
+        SQLiteDatabase db = this.getReadableDatabase();
+        String query = "SELECT " + COLUMN_IS_SELLER_RATED + " FROM " + TABLE_NAME + " WHERE " + COLUMN_PURCHASE_ID + " = ?";
+        Cursor cursor = db.rawQuery(query, new String[]{String.valueOf(purchaseId)});
+        boolean isRated = false;
+        if (cursor.moveToFirst()) {
+            isRated = cursor.getInt(0) == 1; // 出品者評価済みか確認
+        }
+        cursor.close();
+        return isRated;
+    }
+
+    // 指定された購入IDの購入者IDを取得する
+    public String getBuyerIdByPurchaseId(int purchaseId) {
+        SQLiteDatabase db = this.getReadableDatabase();
+        String query = "SELECT " + COLUMN_BUYER_ID + " FROM " + TABLE_NAME + " WHERE " + COLUMN_PURCHASE_ID + " = ?";
+        Cursor cursor = db.rawQuery(query, new String[]{String.valueOf(purchaseId)});
+        String buyerId = null; // デフォルト値（該当なしの場合）
+        if (cursor.moveToFirst()) {
+            buyerId = cursor.getString(0); // 購入者IDを文字列として取得
+        }
+        cursor.close();
+        return buyerId;
+    }
+
+    // 配送状況を更新する
+    public void updateItemShippedStatus(int purchaseId) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues values = new ContentValues();
+        values.put(COLUMN_IS_SHIPPED, 1); // 配送済み (true) を設定
+
+        // WHERE句で item_id を指定
+        String whereClause = COLUMN_ITEM_ID + " = ?";
+        String[] whereArgs = {String.valueOf(purchaseId)};
+
+        // データベースの更新
+        int rowsUpdated = db.update(TABLE_NAME, values, whereClause, whereArgs);
+        if (rowsUpdated > 0) {
+            Log.d("Database", "Item " + purchaseId + " was successfully updated to shipped.");
+        } else {
+            Log.d("Database", "Failed to update item " + purchaseId + ". It may not exist.");
+        }
+    }
+
+    // 指定された購入IDの配送先IDを取得する
+    public String getDestinationByPurchaseId(int purchaseId) {
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor cursor = null;
+        try {
+            // クエリを実行して destination_id を取得
+            cursor = db.rawQuery(
+                    "SELECT " + COLUMN_DESTINATION_ID + " FROM " + TABLE_NAME + " WHERE " + COLUMN_PURCHASE_ID + " = ?",
+                    new String[]{String.valueOf(purchaseId)}
+            );
+
+            if (cursor.moveToFirst()) {
+                // destination_id を取得
+                return cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_DESTINATION_ID));
+            }
+        } finally {
+            if (cursor != null) {
+                cursor.close();
+            }
+        }
+        return null; // データが見つからなかった場合
+    }
 
 
 }
