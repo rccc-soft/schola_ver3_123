@@ -9,6 +9,7 @@ import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -30,6 +31,7 @@ public class ExhibitList extends AppCompatActivity implements View.OnClickListen
     private ImageView exlist_exhibitbtn;
     private ImageView exlist_favobtn;
     private ImageView exlist_mypagebtn;
+    private ImageButton backButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,6 +53,9 @@ public class ExhibitList extends AppCompatActivity implements View.OnClickListen
 
         exlist_mypagebtn = findViewById(R.id.exlist_mypagebtn);
         exlist_mypagebtn.setOnClickListener(this);
+
+        backButton = findViewById(R.id.backButton);
+        backButton.setOnClickListener(this);
 
 
         dbHelper = new ProductDatabaseHelper(this);
@@ -167,6 +172,8 @@ public class ExhibitList extends AppCompatActivity implements View.OnClickListen
             // intentは未設定なので、必要なクラスを設定してください
 //          intent = new Intent(getApplication(), Favorite.class); // 例：お気に入り画面への遷移
         } else if (v.getId() == R.id.exlist_mypagebtn) {
+            intent = new Intent(getApplication(), MyPage.class);
+        } else if (v.getId() == R.id.backButton) {
             intent = new Intent(getApplication(), MyPage.class);
         }
 

@@ -198,7 +198,7 @@ public class HomePage extends AppCompatActivity implements View.OnClickListener 
         } else if (v.getId() == R.id.home_exhibitbtn) {
             intent = new Intent(getApplication(), Exhibit.class);
         } else if (v.getId() == R.id.home_favobtn) {
-            // お気に入り画面への遷移（未実装）
+            intent = new Intent(getApplication(), FavoriteList.class);
         } else if (v.getId() == R.id.home_mypagebtn) {
             intent = new Intent(getApplication(), MyPage.class);
         } else if (v.getId() == R.id.noticeButton) {

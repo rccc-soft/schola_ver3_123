@@ -11,7 +11,7 @@ import java.util.Random;
 
 public class DatabaseHelper extends SQLiteOpenHelper {
 
-    private static final int DATABASE_VERSION = 5; // バージョンを更新
+    private static final int DATABASE_VERSION = 6; // バージョンを更新
     private static final String DATABASE_NAME = "korekore.db";
 
     // テーブルとカラムの定義
@@ -49,6 +49,12 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     public static final String COLUMN_DELIVERY_PHONE = "delivery_phone"; // 電話番号
     public static final String COLUMN_DELIVERY_PASSWORD = "delivery_password"; // パスワード
     public static final String COLUMN_DELIVERY_DOCUMENTS = "delivery_documents"; // 必要書類のパス
+
+    // お気に入りテーブルの定義
+    public static final String TABLE_FAVORITES = "Favorites";
+    public static final String COLUMN_FAVORITE_ID = "favorite_id";
+    public static final String COLUMN_PRODUCT_ID = "product_id";
+    public static final String COLUMN_FAVORITE_MEMBER_ID = "favorite_member_id";
 
     // 会員テーブル作成SQL
     private static final String CREATE_TABLE_MEMBERS =
@@ -111,6 +117,15 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                     "FOREIGN KEY (" + COLUMN_MEMBER_ID + ") REFERENCES " + TABLE_MEMBERS + "(" + COLUMN_MEMBER_ID + ")" + // 外部キー
                     ");";
 
+    // お気に入りテーブル作成SQL
+    private static final String CREATE_TABLE_FAVORITES =
+            "CREATE TABLE " + TABLE_FAVORITES + " (" +
+                    COLUMN_FAVORITE_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
+                    COLUMN_PRODUCT_ID + " TEXT NOT NULL, " +
+                    COLUMN_FAVORITE_MEMBER_ID + " TEXT NOT NULL, " +
+                    "FOREIGN KEY (" + COLUMN_PRODUCT_ID + ") REFERENCES Products(product_id), " +
+                    "FOREIGN KEY (" + COLUMN_FAVORITE_MEMBER_ID + ") REFERENCES " + TABLE_MEMBERS + "(" + COLUMN_MEMBER_ID + ")" +
+                    ");";
 
 
     public DatabaseHelper(Context context) {
@@ -123,6 +138,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         db.execSQL(CREATE_TABLE_PARENTS);
         db.execSQL(CREATE_TABLE_DELIVERY);
         db.execSQL(CREATE_TABLE_DELIVERY_ADDRESS); // 配送先テーブルを作成
+        db.execSQL(CREATE_TABLE_FAVORITES);
     }
 
     @Override
@@ -440,4 +456,40 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         Log.d("DatabaseHelper", "テストデータを配送先テーブルに挿入しました。");
     }
 
+
+    public Cursor getDeliveryAddressByMemberId(String memberId) {
+        SQLiteDatabase db = this.getReadableDatabase();
+        String query = "SELECT * FROM " + TABLE_DELIVERY_ADDRESS + " WHERE " + COLUMN_MEMBER_ID + " = ?";
+        return db.rawQuery(query, new String[]{memberId});
+    }
+
+    // お気に入りを追加するメソッド
+    public long addFavorite(String productId, String memberId) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues values = new ContentValues();
+        values.put(COLUMN_PRODUCT_ID, productId);
+        values.put(COLUMN_FAVORITE_MEMBER_ID, memberId);
+        return db.insert(TABLE_FAVORITES, null, values);
+    }
+
+    // お気に入りを削除するメソッド
+    public int removeFavorite(String productId, String memberId) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        return db.delete(TABLE_FAVORITES,
+                COLUMN_PRODUCT_ID + " = ? AND " + COLUMN_FAVORITE_MEMBER_ID + " = ?",
+                new String[]{productId, memberId});
+    }
+
+    // お気に入りかどうかを確認するメソッド
+    public boolean isFavorite(String productId, String memberId) {
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor cursor = db.query(TABLE_FAVORITES, null,
+                COLUMN_PRODUCT_ID + " = ? AND " + COLUMN_FAVORITE_MEMBER_ID + " = ?",
+                new String[]{productId, memberId}, null, null, null);
+        boolean isFavorite = cursor != null && cursor.getCount() > 0;
+        if (cursor != null) {
+            cursor.close();
+        }
+        return isFavorite;
+    }
 }

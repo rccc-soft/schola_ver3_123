@@ -51,6 +51,7 @@
             app:layout_constraintTop_toTopOf="parent" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 
+
     <EditText
         android:id="@+id/editTextText"
         android:layout_width="370dp"

@@ -8,8 +8,10 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -25,10 +27,15 @@ import java.util.Random;
 
 public class ProductDetail extends AppCompatActivity implements View.OnClickListener {
 
+    private ImageButton favoriteButton;
+    private DatabaseHelper dbHelper;
+    private String userId;
+
     private Button evaluationbtn;
     private Button profilebtn;
     private Button buybtn;
     private Button chatbtn;
+    private ImageButton backbtn;
 
     private ImageView productImageView;
     private TextView productNameTextView;
@@ -60,6 +67,16 @@ public class ProductDetail extends AppCompatActivity implements View.OnClickList
             editor.apply();
         }
 
+        favoriteButton = findViewById(R.id.favoriteButton);
+        favoriteButton.setOnClickListener(this);
+
+        dbHelper = new DatabaseHelper(this);
+
+        SharedPreferences prefs = getSharedPreferences("UserPrefs", MODE_PRIVATE);
+        userId = prefs.getString("user_id", null);
+
+        updateFavoriteButtonState();
+
         initializeViews();
         setupClickListeners();
         displayProductDetails();
@@ -70,6 +87,7 @@ public class ProductDetail extends AppCompatActivity implements View.OnClickList
         profilebtn = findViewById(R.id.profilebtn);
         buybtn = findViewById(R.id.buybtn);
         chatbtn = findViewById(R.id.chatbtn);
+        backbtn = findViewById(R.id.backbtn);
 
         productImageView = findViewById(R.id.productImageView);
         productNameTextView = findViewById(R.id.productNameTextView);
@@ -86,6 +104,15 @@ public class ProductDetail extends AppCompatActivity implements View.OnClickList
         profilebtn.setOnClickListener(this);
         buybtn.setOnClickListener(this);
         chatbtn.setOnClickListener(this);
+        backbtn.setOnClickListener(this);
+    }
+
+    private void updateFavoriteButtonState() {
+        if (userId != null && productId != null) {
+            boolean isFavorite = dbHelper.isFavorite(productId, userId);
+            favoriteButton.setImageResource(isFavorite ?
+                    R.drawable.ic_favorite_filled : R.drawable.ic_favorite_border);
+        }
     }
 
     private void displayProductDetails() {
@@ -150,19 +177,32 @@ public class ProductDetail extends AppCompatActivity implements View.OnClickList
                 try {
                     Date birthDate = sdf.parse(birthday);
 
-                    // 現在の日付を取得し、4月1日の日付を設定
+                    // 現在の日付を取得
                     Calendar today = Calendar.getInstance();
-                    Calendar graduationDate = Calendar.getInstance();
-                    graduationDate.set(today.get(Calendar.YEAR), Calendar.APRIL, 1); // 4月1日
+                    Calendar birthCalendar = Calendar.getInstance();
+                    birthCalendar.setTime(birthDate);
 
                     // 年齢計算
-                    age = today.get(Calendar.YEAR) - graduationDate.get(Calendar.YEAR);
+                    age = today.get(Calendar.YEAR) - birthCalendar.get(Calendar.YEAR);
 
-//                    // 高校生以上か未満かの判断
-//                    if (today.before(graduationDate)) {
-//                        age--; // 4月1日以前はまだ高校生未満
-//                    }
-//
+                    // 誕生日が今年まだ来ていない場合は1歳引く
+                    if (today.get(Calendar.MONTH) < birthCalendar.get(Calendar.MONTH) ||
+                            (today.get(Calendar.MONTH) == birthCalendar.get(Calendar.MONTH) &&
+                                    today.get(Calendar.DAY_OF_MONTH) < birthCalendar.get(Calendar.DAY_OF_MONTH))) {
+                        age--;
+                    }
+
+                    // 4月1日を基準とした高校生判定
+                    Calendar graduationDate = Calendar.getInstance();
+                    graduationDate.set(today.get(Calendar.YEAR), Calendar.APRIL, 1);
+
+                    // ログを追加
+                    Log.d("AgeCalculation", "Birthday: " + birthday);
+                    Log.d("AgeCalculation", "Age: " + age);
+                    Log.d("AgeCalculation", "Today's Year: " + today.get(Calendar.YEAR));
+                    Log.d("AgeCalculation", "Birth Year: " + birthCalendar.get(Calendar.YEAR));
+                    Log.d("AgeCalculation", "Graduation Year: " + graduationDate.get(Calendar.YEAR));
+
 //                    if (age >= 16) { // 高校生以上（16歳以上）
 //                        Toast.makeText(this, "高校生以上です。", Toast.LENGTH_SHORT).show();
 //                    } else { // 高校生未満
@@ -205,6 +245,26 @@ public class ProductDetail extends AppCompatActivity implements View.OnClickList
         } else if (v.getId() == R.id.chatbtn) {
             Intent intent = new Intent(this, HomePage.class);
             startActivity(intent);
+        } else if (v.getId() == R.id.backbtn) {
+            finish();
+        } else if (v.getId() == R.id.favoriteButton) {
+            toggleFavorite();
         }
+    }
+    private void toggleFavorite() {
+        if (userId == null || productId == null) {
+            Toast.makeText(this, "ログインしてください", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        boolean isFavorite = dbHelper.isFavorite(productId, userId);
+        if (isFavorite) {
+            dbHelper.removeFavorite(productId, userId);
+            Toast.makeText(this, "お気に入りから削除しました", Toast.LENGTH_SHORT).show();
+        } else {
+            dbHelper.addFavorite(productId, userId);
+            Toast.makeText(this, "お気に入りに追加しました", Toast.LENGTH_SHORT).show();
+        }
+        updateFavoriteButtonState();
     }
 }

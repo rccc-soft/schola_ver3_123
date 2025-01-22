@@ -209,8 +209,8 @@ public class MyPage extends AppCompatActivity implements View.OnClickListener{
             Intent intent = new Intent(this, Exhibit.class);
             startActivity(intent);
         } else if (id == R.id.favoritebtn || id == R.id.favoritebtn2) {
-//            Intent intent = new Intent(this, .class);
-//            startActivity(intent);
+            Intent intent = new Intent(getApplication(), FavoriteList.class);
+            startActivity(intent);
         } else if (id == R.id.profilebtn) {
 //            Intent intent = new Intent(this, ProfileView.class);
 //            startActivity(intent);
