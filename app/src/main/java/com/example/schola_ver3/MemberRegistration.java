@@ -135,7 +135,7 @@ public class MemberRegistration extends AppCompatActivity implements View.OnClic
         if (huriganaText.isEmpty()) {
             hurigana.setError("ひらがなを入力してください");
             isValid = false;
-        }  else {
+        } else {
             hurigana.setError(null);
         }
 
@@ -148,8 +148,11 @@ public class MemberRegistration extends AppCompatActivity implements View.OnClic
         }
 
         // 生年月日のチェック
-        if (birthdayText.isEmpty()|| !isValidDate(birthdayText)) {
+        if (birthdayText.isEmpty() || !isValidDate(birthdayText)) {
             birthday.setError("適切な生年月日を入力してください");
+            isValid = false;
+        } else if (isUnder13(birthdayText)) { // 13歳未満の場合
+            birthday.setError("13歳未満の方は登録できません");
             isValid = false;
         } else {
             birthday.setError(null);
@@ -252,16 +255,20 @@ public class MemberRegistration extends AppCompatActivity implements View.OnClic
                         huriganaText, kaiinnameText, birthdayText, schoolText);
 
                 if (isRegistered) {
-                    // 誕生日が現在の日時より18年前以降かどうかを判定
-                    if (isOver18(birthdayText)) {
-                        // 18歳以上の場合
-                        sendEmailConfirmation(userId, emailText);
-                        Intent intent = new Intent(this, MemberComp.class);
-                        startActivity(intent);
-                    } else {
-                        // 18歳未満の場合
+                    // 13歳未満の場合
+                    if (isUnder13(birthdayText)) {
+                        Toast.makeText(this, "13歳未満の方は登録できません", Toast.LENGTH_SHORT).show();
+                    }
+                    // 13歳以上16歳未満の場合
+                    else if (isUnder16(birthdayText)) {
                         sendEmailConfirmation(userId, emailText);
                         Intent intent = new Intent(this, ParentRegistration.class);
+                        startActivity(intent);
+                    }
+                    // 16歳以上の場合
+                    else {
+                        sendEmailConfirmation(userId, emailText);
+                        Intent intent = new Intent(this, MemberComp.class);
                         startActivity(intent);
                     }
                 } else {
@@ -285,23 +292,40 @@ public class MemberRegistration extends AppCompatActivity implements View.OnClic
     }
 
     // 誕生日が現在の日時より18年前以降かどうかを判定
-    private boolean isOver18(String birthdayText) {
+    // 誕生日が現在の日時より13年前以降かどうかを判定
+    // 誕生日が現在の日時より16年前以降かどうかを判定
+    private boolean isUnder16(String birthdayText) {
         try {
-            // 誕生日をDate型に変換（yyyyMMdd形式）
             SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
             Date birthDate = sdf.parse(birthdayText);
 
-            // 現在の日付を取得
             Calendar today = Calendar.getInstance();
             Calendar birthCalendar = Calendar.getInstance();
             birthCalendar.setTime(birthDate);
 
-            // 18年前の日付を計算
-            Calendar eighteenYearsAgo = Calendar.getInstance();
-            eighteenYearsAgo.add(Calendar.YEAR, -18);
+            Calendar sixteenYearsAgo = Calendar.getInstance();
+            sixteenYearsAgo.add(Calendar.YEAR, -16);
 
-            // 誕生日が18年前以降かどうかを判定
-            return birthCalendar.before(eighteenYearsAgo) || birthCalendar.equals(eighteenYearsAgo);
+            return birthCalendar.after(sixteenYearsAgo); // 16歳未満ならtrue
+        } catch (ParseException e) {
+            Log.e("MemberRegistration", "誕生日が不正です", e);
+            return false; // エラーが発生した場合はデフォルトでfalseを返す
+        }
+    }
+    // 誕生日が現在の日時より13年前以降かどうかを判定
+    private boolean isUnder13(String birthdayText) {
+        try {
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
+            Date birthDate = sdf.parse(birthdayText);
+
+            Calendar today = Calendar.getInstance();
+            Calendar birthCalendar = Calendar.getInstance();
+            birthCalendar.setTime(birthDate);
+
+            Calendar thirteenYearsAgo = Calendar.getInstance();
+            thirteenYearsAgo.add(Calendar.YEAR, -13);
+
+            return birthCalendar.after(thirteenYearsAgo); // 13歳未満ならtrue
         } catch (ParseException e) {
             Log.e("MemberRegistration", "誕生日が不正です", e);
             return false; // エラーが発生した場合はデフォルトでfalseを返す
