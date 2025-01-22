@@ -1,6 +1,7 @@
 package com.example.schola_ver3;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 
@@ -12,6 +13,8 @@ import androidx.appcompat.app.AppCompatActivity;
 //EvaluationSellから
 public class EvaluationSellSuccess extends AppCompatActivity implements View.OnClickListener{
     private Button completebtn;
+
+    private String temporaryProductId;
     //editとかDBに必要なものを追加
 
     @Override
@@ -23,6 +26,26 @@ public class EvaluationSellSuccess extends AppCompatActivity implements View.OnC
         completebtn = findViewById(R.id.completebtn);
         completebtn.setOnClickListener(this);
 
+        // Intent から productId を受け取る
+        Intent intent = getIntent();
+        temporaryProductId = intent.getStringExtra("product_id");
+
+        // 商品IDが正しい場合、商品を削除
+        if (temporaryProductId != null && !temporaryProductId.isEmpty()) {
+            deleteProduct(temporaryProductId);
+        }
+
+    }
+
+    private void deleteProduct(String temporaryProductId) {
+        try {
+            // 商品削除処理を呼び出す
+            ProductDatabaseHelper dbHelper = new ProductDatabaseHelper(this);
+            dbHelper.deleteProductById(temporaryProductId); // 商品IDで削除
+            Log.d("EvaluationSellSuccess", "Product deleted: " + temporaryProductId);
+        } catch (Exception e) {
+            Log.e("EvaluationSellSuccess", "Error deleting product", e);
+        }
     }
 
     @Override

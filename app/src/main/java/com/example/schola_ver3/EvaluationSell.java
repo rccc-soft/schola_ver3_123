@@ -37,6 +37,9 @@ public class EvaluationSell extends AppCompatActivity implements View.OnClickLis
     private String productId;
     private String sellerId;
     private String buyerId;
+    private String temporaryProductId;
+    private String temporarySellerId;
+    private String temporaryBuyerId;
 
     private ProductDatabaseHelper dbHelper;
 
@@ -49,17 +52,23 @@ public class EvaluationSell extends AppCompatActivity implements View.OnClickLis
         reviewManager = new ReviewManager(this);
 
         // Receive IDs via Intent
-        SharedPreferences sharedPreferences = getSharedPreferences("UserPrefs", MODE_PRIVATE);
-        buyerId = sharedPreferences.getString("user_id", "");
-        SharedPreferences prefs = getSharedPreferences("ProductPrefs", MODE_PRIVATE);
-        productId = prefs.getString("product_id", "");
+//        SharedPreferences sharedPreferences = getSharedPreferences("UserPrefs", MODE_PRIVATE);
+//        buyerId = sharedPreferences.getString("user_id", "");
+//        SharedPreferences prefs = getSharedPreferences("ProductPrefs", MODE_PRIVATE);
+//        productId = prefs.getString("product_id", "");
+        // Intent から productId, sellerId, buyerId を受け取る
+        Intent intent = getIntent();
+        temporaryProductId = intent.getStringExtra("product_id");
+        temporarySellerId = intent.getStringExtra("seller_member_id");
+        temporaryBuyerId = intent.getStringExtra("buyer_member_id");
 
         dbHelper = new ProductDatabaseHelper(this);
         setDeliveryMethod();
 
         if (sellerId != null) {
             // 出品者IDが見つかった場合の処理
-            System.out.println("出品者ID: " + sellerId);
+//            System.out.println("出品者ID: " + sellerId);
+            System.out.println("出品者ID: " + temporarySellerId);
         } else {
             // 出品者IDが見つからなかった場合の処理
             System.out.println("該当する商品が見つかりません");
@@ -162,11 +171,13 @@ public class EvaluationSell extends AppCompatActivity implements View.OnClickLis
 
     private void saveReviewAndNavigateToSuccess() {
         try {
-            reviewManager.addReview(buyerId, sellerId, reviewScore, tempMessage);
+//            reviewManager.addReview(buyerId, sellerId, reviewScore, tempMessage);
+            reviewManager.addReview(temporaryBuyerId, temporarySellerId, reviewScore, tempMessage);
             showToast("レビューが送信されました");
 
             // ホーム画面に遷移
             Intent intent = new Intent(this, EvaluationSellSuccess.class);
+            intent.putExtra("product_id", temporaryProductId); // productIdを渡す
             startActivity(intent);
             finish();
         } catch (Exception e) {
@@ -184,7 +195,8 @@ public class EvaluationSell extends AppCompatActivity implements View.OnClickLis
     }
 
     private void setDeliveryMethod() {
-        Cursor cursor = dbHelper.getProductInfo(productId);
+//        Cursor cursor = dbHelper.getProductInfo(productId);
+        Cursor cursor = dbHelper.getProductInfo(temporaryProductId);
         if (cursor != null && cursor.moveToFirst()) {
             sellerId = cursor.getString(cursor.getColumnIndexOrThrow(ProductDatabaseHelper.COLUMN_SELLER_ID));
         } else {
