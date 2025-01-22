@@ -14,7 +14,7 @@ import androidx.appcompat.app.AppCompatActivity;
 public class ExhibitShiped extends AppCompatActivity implements View.OnClickListener {
     private Button homeButton;
 
-    private PurchaseDatabaseHelper dbHelper; // 購入テーブル（仮）
+    private DatabaseHelper dbHelper; // 購入テーブル（仮）
     private int purchaseId; // 購入ID（仮）
 
     @SuppressLint("MissingInflatedId")
@@ -28,7 +28,7 @@ public class ExhibitShiped extends AppCompatActivity implements View.OnClickList
         homeButton.setOnClickListener(this);
 
         // DBヘルパーの初期化
-        dbHelper = new PurchaseDatabaseHelper(this); // 購入テーブル（仮）
+        dbHelper = new DatabaseHelper(this); // 購入テーブル（仮）
 
         // Intent から購入IDを受け取る
         Intent intent = getIntent();

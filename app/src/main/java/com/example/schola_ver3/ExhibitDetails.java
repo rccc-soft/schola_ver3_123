@@ -19,7 +19,7 @@ public class ExhibitDetails extends AppCompatActivity implements View.OnClickLis
     private Button shippingButton;
     private Button buyerRatingButton;
 
-    private PurchaseDatabaseHelper dbHelper; // 購入テーブル（仮）
+    private DatabaseHelper dbHelper; // 購入テーブル（仮）
 //    private int currentItemId = 4; // 該当する商品ID (仮の値)
     private boolean isShipped;
     private boolean itemExists;
@@ -34,7 +34,7 @@ public class ExhibitDetails extends AppCompatActivity implements View.OnClickLis
         setContentView(R.layout.activity_exhibit_details);
 
         // DBヘルパーの初期化
-        dbHelper = new PurchaseDatabaseHelper(this);
+        dbHelper = new DatabaseHelper(this);
 
         // Intent から productId を受け取る
         Intent intent = getIntent();

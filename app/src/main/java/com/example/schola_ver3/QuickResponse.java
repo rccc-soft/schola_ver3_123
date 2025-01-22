@@ -18,7 +18,7 @@ public class QuickResponse extends AppCompatActivity {
     private ImageButton backButton; // 戻るボタン
     private Button shippingCompletedButton; // 発送完了ボタン
 //    private QRDatabaseHelper dbHelper; // DatabaseHelperのインスタンス
-    private PurchaseDatabaseHelper dbHelper;  // 購入テーブル（仮）
+    private DatabaseHelper dbHelper;  // 購入テーブル（仮）
     private int purchaseId; // 購入ID
 
     @SuppressLint("MissingInflatedId")
@@ -35,7 +35,7 @@ public class QuickResponse extends AppCompatActivity {
 //        shippingCompletedButton.setOnClickListener((View.OnClickListener) this);
 
         // データベースヘルパーを初期化
-        dbHelper = new PurchaseDatabaseHelper(this); // 購入テーブル（仮）
+        dbHelper = new DatabaseHelper(this); // 購入テーブル（仮）
 
         // QRコードを表示するImageView
         @SuppressLint({"MissingInflatedId", "LocalSuppress"}) ImageView qrCodeImageView = findViewById(R.id.qrCodeImageView);
