@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:background="#FFF5F8"
+    android:background="#FFF4FF"
     android:padding="16dp">
 
     <ImageButton
@@ -115,11 +115,11 @@
 
     <Button
         android:id="@+id/editButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="130dp"
+        android:layout_height="50dp"
         android:layout_gravity="center"
         android:layout_marginTop="16dp"
-        android:backgroundTint="#705B7C"
+        android:backgroundTint="#79747E"
         android:text="送信"
         android:textColor="#FFFFFF" />
 </LinearLayout>
