@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#F1F1F1"
+    android:orientation="vertical"
+    android:padding="0dp"
+    tools:context=".CreditSetting">
+
+    <!-- トップバーのロゴ -->
+    <ImageView
+        android:id="@+id/imageView10"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="-9dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/topbarlogo" />
+
+    <!-- 戻るボタン -->
+    <ImageButton
+        android:id="@+id/backButton"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_marginTop="13dp"
+        android:layout_marginEnd="345dp"
+        android:background="#FFFFFF"
+        android:scaleType="fitXY"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/backbutton" />
+
+    <!-- 出品編集ボタン -->
+    <Button
+        android:id="@+id/exhibitEditButton"
+        android:layout_width="180dp"
+        android:layout_height="60dp"
+        android:backgroundTint="#79747E"
+        android:text="出品編集"
+        android:layout_marginTop="200dp"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/imageView10"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+    <!-- チャット一覧ボタン -->
+    <Button
+        android:id="@+id/chatListButton"
+        android:layout_width="180dp"
+        android:layout_height="60dp"
+        android:backgroundTint="#79747E"
+        android:text="チャット一覧"
+        android:layout_marginTop="50dp"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/exhibitEditButton"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+    <!-- 商品発送ボタン -->
+    <Button
+        android:id="@+id/shippingButton"
+        android:layout_width="180dp"
+        android:layout_height="60dp"
+        android:backgroundTint="#79747E"
+        android:text="商品発送"
+        android:layout_marginTop="50dp"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/chatListButton"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+    <!-- 購入者評価ボタン -->
+    <Button
+        android:id="@+id/buyerRatingButton"
+        android:layout_width="180dp"
+        android:layout_height="60dp"
+        android:backgroundTint="#79747E"
+        android:text="購入者評価"
+        android:layout_marginTop="50dp"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/shippingButton"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
