@@ -11,7 +11,7 @@ import java.util.Random;
 
 public class DatabaseHelper extends SQLiteOpenHelper {
 
-    private static final int DATABASE_VERSION = 8; // バージョンを更新
+    private static final int DATABASE_VERSION = 11; // バージョンを更新
     private static final String DATABASE_NAME = "korekore.db";
 
     // テーブルとカラムの定義
@@ -49,6 +49,13 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     public static final String COLUMN_DELIVERY_PHONE = "delivery_phone"; // 電話番号
     public static final String COLUMN_DELIVERY_PASSWORD = "delivery_password"; // パスワード
     public static final String COLUMN_DELIVERY_DOCUMENTS = "delivery_documents"; // 必要書類のパス
+
+    // お気に入りテーブルの定義
+    public static final String TABLE_FAVORITES = "Favorites";
+    public static final String COLUMN_FAVORITE_ID = "favorite_id";
+    public static final String COLUMN_PRODUCT_ID = "product_id";
+    public static final String COLUMN_FAVORITE_MEMBER_ID = "favorite_member_id";
+
 
     // 会員テーブル作成SQL
     private static final String CREATE_TABLE_MEMBERS =
@@ -91,6 +98,16 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                     COLUMN_DELIVERY_PHONE + " TEXT NOT NULL, " + // 電話番号
                     COLUMN_DELIVERY_PASSWORD + " TEXT NOT NULL, " + // パスワード
                     COLUMN_DELIVERY_DOCUMENTS + " TEXT" + // 必要書類のパス
+                    ");";
+
+    // お気に入りテーブル作成SQL
+    private static final String CREATE_TABLE_FAVORITES =
+            "CREATE TABLE " + TABLE_FAVORITES + " (" +
+                    COLUMN_FAVORITE_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
+                    COLUMN_PRODUCT_ID + " TEXT NOT NULL, " +
+                    COLUMN_FAVORITE_MEMBER_ID + " TEXT NOT NULL, " +
+                    "FOREIGN KEY (" + COLUMN_PRODUCT_ID + ") REFERENCES Products(product_id), " +
+                    "FOREIGN KEY (" + COLUMN_FAVORITE_MEMBER_ID + ") REFERENCES " + TABLE_MEMBERS + "(" + COLUMN_MEMBER_ID + ")" +
                     ");";
 
     public static final String TABLE_DELIVERY_ADDRESS = "DeliveryAddress";
@@ -141,16 +158,16 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                     COLUMN_DELIVERY + " TEXT)";
 
 
-    //売り上げテーブル
+    // 売上テーブルの定義
+    public static final String TABLE_SALES = "sales";
+    public static final String COLUMN_SALES_MEMBER_ID = "member_id";
+    public static final String COLUMN_SALES_AMOUNT = "sales_amount";
 
-    public static final String TABLE_SALES = "Sales";
-    public static final String COLUMN_SALE_SELLER_ID = "seller_id"; // 出品者ID
-    public static final String COLUMN_SALE_PRICE = "price"; // 売上金額
-
+    // 売上テーブル作成SQL
     private static final String CREATE_TABLE_SALES =
             "CREATE TABLE " + TABLE_SALES + " (" +
-                    COLUMN_SALE_SELLER_ID + " TEXT," + // 出品者ID
-                    COLUMN_SALE_PRICE + " INTEGER" + // 売上金額
+                    COLUMN_SALES_MEMBER_ID + " TEXT PRIMARY KEY," +
+                    COLUMN_SALES_AMOUNT + " INTEGER" +
                     ");";
 
 
@@ -190,6 +207,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         db.execSQL(SQL_CREATE_ENTRIES);
         db.execSQL(CREATE_TABLE_SALES);
         db.execSQL(createTableQuery);
+        db.execSQL(CREATE_TABLE_FAVORITES);
     }
 
     @Override
@@ -591,10 +609,9 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     // 会員者IDに対応する配送先IDを取得するメソッド
     public String getDestinationIdByMemberId(String buyerId) {
         SQLiteDatabase db = this.getReadableDatabase();
-        String destinationId = "";
+        String destinationId = null;
 
         try {
-            // クエリを実行して配送先IDを取得
             String query = "SELECT " + COLUMN_DELIVERY_ADDRESS_ID + " FROM " + TABLE_DELIVERY_ADDRESS + " WHERE " + COLUMN_MEMBER_ID + " = ?";
             Cursor cursor = db.rawQuery(query, new String[]{buyerId});
 
@@ -602,22 +619,24 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 int destinationIdIndex = cursor.getColumnIndex(COLUMN_DELIVERY_ADDRESS_ID);
                 if (destinationIdIndex != -1) {
                     destinationId = cursor.getString(destinationIdIndex);
-                } else {
-                    Log.e("DatabaseHelper", "配送先IDのカラムが見つかりませんでした");
                 }
+            }
+
+            if (cursor != null) {
                 cursor.close();
+            }
+
+            if (destinationId == null) {
+                Log.e("DatabaseHelper", "配送先が見つかりません。Buyer ID: " + buyerId);
             } else {
-                Log.e("DatabaseHelper", "該当する配送先が見つかりませんでした");
+                Log.d("DatabaseHelper", "配送先が見つかりました。Destination ID: " + destinationId);
             }
         } catch (Exception e) {
             Log.e("DatabaseHelper", "配送先IDの取得中にエラーが発生しました", e);
-        } finally {
-            db.close();
         }
 
         return destinationId;
     }
-
     // テスト用の配送先データを挿入するメソッド
     public void insertTestDeliveryAddresses(String buyerId) {
         SQLiteDatabase db = this.getWritableDatabase();
@@ -637,16 +656,22 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     }
 
     // 指定された商品IDに関連する購入IDを取得する
-    public int getPurchaseIdByItemId(String itemId) {
+    public int getPurchaseIdByItemId(String productId) {
+        if (productId == null) {
+            return -1; // または適切なデフォルト値
+        }
         SQLiteDatabase db = this.getReadableDatabase();
+        int purchaseId = -1;
+
         String query = "SELECT " + COLUMN_PURCHASE_ID + " FROM " + TABLE_NAME +
                 " WHERE " + COLUMN_ITEM_ID + " = ?";
-        Cursor cursor = db.rawQuery(query, new String[]{itemId});
-        int purchaseId = -1; // デフォルト値（該当なしの場合）
+        Cursor cursor = db.rawQuery(query, new String[]{productId});
+
         if (cursor.moveToFirst()) {
-            purchaseId = cursor.getInt(0); // 該当する購入IDを取得
+            purchaseId = cursor.getInt(cursor.getColumnIndex(COLUMN_PURCHASE_ID));
         }
         cursor.close();
+
         return purchaseId;
     }
 
@@ -745,5 +770,92 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return null; // データが見つからなかった場合
     }
 
+    public Cursor getDeliveryAddressByMemberId(String memberId) {
+        SQLiteDatabase db = this.getReadableDatabase();
+        String query = "SELECT * FROM " + TABLE_DELIVERY_ADDRESS + " WHERE " + COLUMN_MEMBER_ID + " = ?";
+        return db.rawQuery(query, new String[]{memberId});
+    }
 
+    // お気に入りを追加するメソッド
+    public long addFavorite(String productId, String memberId) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues values = new ContentValues();
+        values.put(COLUMN_PRODUCT_ID, productId);
+        values.put(COLUMN_FAVORITE_MEMBER_ID, memberId);
+        return db.insert(TABLE_FAVORITES, null, values);
+    }
+
+    // お気に入りを削除するメソッド
+    public int removeFavorite(String productId, String memberId) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        return db.delete(TABLE_FAVORITES,
+                COLUMN_PRODUCT_ID + " = ? AND " + COLUMN_FAVORITE_MEMBER_ID + " = ?",
+                new String[]{productId, memberId});
+    }
+
+    // お気に入りかどうかを確認するメソッド
+    public boolean isFavorite(String productId, String memberId) {
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor cursor = db.query(TABLE_FAVORITES, null,
+                COLUMN_PRODUCT_ID + " = ? AND " + COLUMN_FAVORITE_MEMBER_ID + " = ?",
+                new String[]{productId, memberId}, null, null, null);
+        boolean isFavorite = cursor != null && cursor.getCount() > 0;
+        if (cursor != null) {
+            cursor.close();
+        }
+        return isFavorite;
+    }
+
+    public boolean deleteMember(String memberId) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        int rowsDeleted = db.delete(TABLE_MEMBERS, COLUMN_MEMBER_ID + " = ?", new String[]{memberId});
+        return rowsDeleted > 0;
+    }
+
+    // 売上金額を取得するメソッド
+    public int getSalesAmount(String userId) {
+        SQLiteDatabase db = this.getReadableDatabase();
+        int salesAmount = 0;
+
+        String query = "SELECT " + COLUMN_SALES_AMOUNT +
+                " FROM " + TABLE_SALES +
+                " WHERE " + COLUMN_SALES_MEMBER_ID + " = ?";
+        Cursor cursor = db.rawQuery(query, new String[]{userId});
+
+        if (cursor.moveToFirst()) {
+            salesAmount = cursor.getInt(0);
+        }
+        cursor.close();
+        return salesAmount;
+    }
+
+    // 売上金額を更新するメソッド
+    public void updateSalesAmount(String userId, int newAmount) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues values = new ContentValues();
+        values.put(COLUMN_SALES_AMOUNT, newAmount);
+
+        int rowsAffected = db.update(TABLE_SALES, values, COLUMN_SALES_MEMBER_ID + " = ?", new String[]{userId});
+
+        if (rowsAffected == 0) {
+            // 該当ユーザーの売上データがない場合、新規挿入
+            values.put(COLUMN_SALES_MEMBER_ID, userId);
+            db.insert(TABLE_SALES, null, values);
+            Log.d("DatabaseHelper", "Inserted new sales record for userId: " + userId);
+        } else {
+            Log.d("DatabaseHelper", "Updated sales record for userId: " + userId);
+        }
+    }
+
+    public String getBuyerIdByItemId(String itemId) {
+        SQLiteDatabase db = this.getReadableDatabase();
+        String query = "SELECT " + COLUMN_BUYER_ID + " FROM " + TABLE_NAME + " WHERE " + COLUMN_ITEM_ID + " = ?";
+        Cursor cursor = db.rawQuery(query, new String[]{itemId});
+        String buyerId = null;
+        if (cursor.moveToFirst()) {
+            buyerId = cursor.getString(cursor.getColumnIndex(COLUMN_BUYER_ID));
+        }
+        cursor.close();
+        return buyerId;
+    }
 }

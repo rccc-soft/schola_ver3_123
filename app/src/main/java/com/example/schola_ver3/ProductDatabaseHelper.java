@@ -1,7 +1,11 @@
 package com.example.schola_ver3;
 
+import static com.example.schola_ver3.DatabaseHelper.COLUMN_SALES_AMOUNT;
+import static com.example.schola_ver3.DatabaseHelper.COLUMN_SALES_MEMBER_ID;
 import static com.example.schola_ver3.DatabaseHelper.TABLE_MEMBERS;
+import static com.example.schola_ver3.DatabaseHelper.TABLE_SALES;
 
+import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
@@ -49,6 +53,10 @@ public class ProductDatabaseHelper extends SQLiteOpenHelper {
     }
 
     public Cursor getProductInfo(String productId) {
+        if (productId == null) {
+            Log.e("ProductDatabaseHelper", "getProductInfo: productId is null");
+            return null;
+        }
         SQLiteDatabase db = this.getReadableDatabase();
         String query = "SELECT * FROM " + TABLE_NAME + " WHERE " + COLUMN_ID + " = ?";
         return db.rawQuery(query, new String[]{productId});
@@ -96,4 +104,55 @@ public class ProductDatabaseHelper extends SQLiteOpenHelper {
         cursor.close();
         return sellerId;
     }
+
+    public int getSalesAmount(String userId) {
+        SQLiteDatabase db = this.getReadableDatabase();
+        int salesAmount = 0;
+
+        String query = "SELECT " + COLUMN_SALES_AMOUNT +
+                " FROM " + TABLE_SALES +
+                " WHERE " + COLUMN_SALES_MEMBER_ID + " = ?";
+        Cursor cursor = db.rawQuery(query, new String[]{userId});
+
+        if (cursor.moveToFirst()) {
+            salesAmount = cursor.getInt(0);
+        }
+        cursor.close();
+        return salesAmount;
+    }
+
+    public int getProductPrice(String productId) {
+        SQLiteDatabase db = this.getReadableDatabase();
+        String query = "SELECT " + COLUMN_PRICE + " FROM " + TABLE_NAME + " WHERE " + COLUMN_ID + " = ?";
+        Cursor cursor = db.rawQuery(query, new String[]{productId});
+        int price = 0;
+        if (cursor.moveToFirst()) {
+            price = cursor.getInt(0); // 価格を取得
+        }
+        cursor.close();
+        return price;
+    }
+
+    public void updateSalesAmount(String userId, int newAmount) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues values = new ContentValues();
+        values.put(COLUMN_SALES_AMOUNT, newAmount);
+
+        db.insertWithOnConflict(TABLE_SALES, null, values, SQLiteDatabase.CONFLICT_REPLACE);
+    }
+
+    // 商品が購入済みかどうかを判定するメソッド
+    public boolean isProductSold(String productId) {
+        SQLiteDatabase db = this.getReadableDatabase();
+        String query = "SELECT " + COLUMN_SOLD + " FROM " + TABLE_NAME + " WHERE " + COLUMN_ID + " = ?";
+        Cursor cursor = db.rawQuery(query, new String[]{productId});
+        boolean isSold = false;
+        if (cursor.moveToFirst()) {
+            isSold = cursor.getInt(0) == 1; // 1 は購入済み
+        }
+        cursor.close();
+        return isSold;
+    }
+
+
 }
