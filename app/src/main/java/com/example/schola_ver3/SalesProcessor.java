@@ -9,11 +9,11 @@ import android.util.Log;
 public class SalesProcessor {
     private static final String TAG = "SalesProcessor";
 
-    private SalesDatabaseHelper salesDbHelper;
+    private DatabaseHelper dbHelper;
     private ProductDatabaseHelper productDbHelper;
 
     public SalesProcessor(Context context) {
-        salesDbHelper = new SalesDatabaseHelper(context);
+        dbHelper = new DatabaseHelper(context);
         productDbHelper = new ProductDatabaseHelper(context);
     }
 
@@ -32,32 +32,21 @@ public class SalesProcessor {
         boolean success = false;
 
         try {
-            // 売上データベースのトランザクション開始
-            salesDb = salesDbHelper.getWritableDatabase();
+            salesDb = dbHelper.getWritableDatabase();
             salesDb.beginTransaction();
 
-            // 売上テーブルに挿入
-            ContentValues salesValues = new ContentValues();
-            salesValues.put("会員ID", memberId);
-            salesValues.put("売上金額", salesAmount);
-            salesValues.put("振り込み方法", paymentMethod);
+            int currentAmount = dbHelper.getSalesAmount(memberId);
+            int updatedAmount = currentAmount + salesAmount;
+            dbHelper.updateSalesAmount(memberId, updatedAmount);
 
-            long salesRowId = salesDb.insert("売上テーブル", null, salesValues);
-            if (salesRowId == -1) {
-                throw new Exception("売上テーブルへの挿入に失敗しました");
-            }
-
-            // トランザクションを成功としてマーク
             salesDb.setTransactionSuccessful();
-            Log.d(TAG, "売上を挿入しました。行ID: " + salesRowId);
+            Log.d(TAG, "売上を更新しました。会員ID: " + memberId + ", 更新後の金額: " + updatedAmount);
 
-            // 商品データベースのトランザクション開始
             productDb = productDbHelper.getWritableDatabase();
             productDb.beginTransaction();
 
-            // 商品を購入済みに更新
             ContentValues productValues = new ContentValues();
-            productValues.put("購入済み", 1); // 1は購入済みを意味する
+            productValues.put("購入済み", 1);
 
             int rowsAffected = productDb.update(
                     "商品テーブル",
@@ -70,7 +59,6 @@ public class SalesProcessor {
                 throw new Exception("商品テーブルの更新に失敗しました。商品ID: " + productId);
             }
 
-            // トランザクションを成功としてマーク
             productDb.setTransactionSuccessful();
             Log.d(TAG, "商品テーブルを更新しました。商品ID: " + productId);
 

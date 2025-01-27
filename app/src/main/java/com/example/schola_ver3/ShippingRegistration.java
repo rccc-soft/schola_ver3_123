@@ -190,6 +190,12 @@ public class ShippingRegistration extends AppCompatActivity implements View.OnCl
                 String adressText = adress.getText().toString().trim();
                 String telnumberText = telnumber.getText().toString().trim();
 
+                Log.d("ShippingRegistration", "Attempting to insert/update delivery address:");
+                Log.d("ShippingRegistration", "User ID: " + useridText);
+                Log.d("ShippingRegistration", "Username: " + usernameText);
+                Log.d("ShippingRegistration", "Postal Code: " + ubinnumberText);
+                Log.d("ShippingRegistration", "Address: " + adressText);
+                Log.d("ShippingRegistration", "Phone Number: " + telnumberText);
                 // DatabaseHelperインスタンスを作成
 //                dbHelper = new TourokuDatabaseHelper(this);
                 dbHelper = new DatabaseHelper(this);

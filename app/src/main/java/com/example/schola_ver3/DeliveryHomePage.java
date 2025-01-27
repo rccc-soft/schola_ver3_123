@@ -7,8 +7,7 @@ import android.widget.Button;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.example.korekore.DeliverySearch;
-import com.example.korekore.R;
+import com.example.schola_ver3.DeliverySearch;
 
 public class DeliveryHomePage extends AppCompatActivity {
 

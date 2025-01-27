@@ -1,5 +1,8 @@
 package com.example.schola_ver3;
 
+import static com.example.schola_ver3.ProductDatabaseHelper.COLUMN_SOLD;
+import static com.example.schola_ver3.ProductDatabaseHelper.TABLE_NAME;
+
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
@@ -29,6 +32,7 @@ public class ProductDetail extends AppCompatActivity implements View.OnClickList
 
     private ImageButton favoriteButton;
     private DatabaseHelper dbHelper;
+    private ProductDatabaseHelper productdbhelper;
     private String userId;
 
     private Button evaluationbtn;
@@ -47,6 +51,7 @@ public class ProductDetail extends AppCompatActivity implements View.OnClickList
     private TextView exhibituserTextView;
 
     private String productId;
+    private String exhibituserId;
 
     private int age;
     @Override
@@ -67,10 +72,13 @@ public class ProductDetail extends AppCompatActivity implements View.OnClickList
             editor.apply();
         }
 
+        exhibituserId = intent.getStringExtra("出品者ID");
+
         favoriteButton = findViewById(R.id.favoriteButton);
         favoriteButton.setOnClickListener(this);
 
         dbHelper = new DatabaseHelper(this);
+        productdbhelper = new ProductDatabaseHelper(this);
 
         SharedPreferences prefs = getSharedPreferences("UserPrefs", MODE_PRIVATE);
         userId = prefs.getString("user_id", null);
@@ -224,33 +232,57 @@ public class ProductDetail extends AppCompatActivity implements View.OnClickList
 
     @Override
     public void onClick(View v) {
-        if (v.getId() == R.id.evaluationbtn) {
-            // 出品者評価ボタンの処理
-            Intent intent = new Intent(this, EvaluationSell.class);
-            startActivity(intent);
-        } else if (v.getId() == R.id.profilebtn) {
-            // 出品者プロフィール画面へ
-        } else if (v.getId() == R.id.buybtn) {
-            // 購入画面へ
-            // 購入処理をここに追加することができます。
-            if (age >= 16) { // 高校生以上（16歳以上）
-                Intent intent = new Intent(this, Buy.class);
-                intent.putExtra("商品ID", productId);
-                startActivity(intent);
-            } else {
-                Intent intent = new Intent(this, ParentCertification.class);
-                intent.putExtra("商品ID", productId);
-                startActivity(intent);
-            }
-        } else if (v.getId() == R.id.chatbtn) {
-            Intent intent = new Intent(this, HomePage.class);
-            startActivity(intent);
-        } else if (v.getId() == R.id.backbtn) {
+        if (v.getId() == R.id.backbtn) {
             finish();
-        } else if (v.getId() == R.id.favoriteButton) {
-            toggleFavorite();
+        } else if(userId != exhibituserId) {
+            boolean isSold = new ProductDatabaseHelper(this).isProductSold(productId);
+            if(isSold) {
+                // 購入済みの場合、購入者IDを確認
+                String buyerId = dbHelper.getBuyerIdByItemId(productId);
+                if (buyerId != null && buyerId.equals(userId)) {
+                    // 自身が購入者の場合、一部の機能を有効にする
+                    if (v.getId() == R.id.evaluationbtn) {
+                        // 出品者評価ボタンの処理
+                        Intent intent = new Intent(this, EvaluationSell.class);
+                        startActivity(intent);
+                    } else if (v.getId() == R.id.profilebtn) {
+                        // 出品者プロフィール画面へ
+                    } else if (v.getId() == R.id.chatbtn) {
+                        Intent intent = new Intent(this, HomePage.class);
+                        startActivity(intent);
+                    } else {
+                        Toast.makeText(this, "この商品は既に購入済みです", Toast.LENGTH_SHORT).show();
+                    }
+                } else {
+                    Toast.makeText(this, "この商品は既に購入済みです", Toast.LENGTH_SHORT).show();
+                }
+            } else {
+                // 購入済みでない場合、全ての機能を有効にする
+                if (v.getId() == R.id.profilebtn) {
+                    // 出品者プロフィール画面へ
+                } else if (v.getId() == R.id.buybtn) {
+                    if (age >= 16) {
+                        Intent intent = new Intent(this, Buy.class);
+                        intent.putExtra("商品ID", productId);
+                        startActivity(intent);
+                    } else {
+                        Intent intent = new Intent(this, ParentCertification.class);
+                        intent.putExtra("商品ID", productId);
+                        startActivity(intent);
+                    }
+                } else if (v.getId() == R.id.chatbtn) {
+                    Intent intent = new Intent(this, HomePage.class);
+                    startActivity(intent);
+                } else if (v.getId() == R.id.favoriteButton) {
+                    toggleFavorite();
+                }
+            }
+        } else {
+            Toast.makeText(this, "出品者のため選択できません", Toast.LENGTH_SHORT).show();
         }
     }
+
+
     private void toggleFavorite() {
         if (userId == null || productId == null) {
             Toast.makeText(this, "ログインしてください", Toast.LENGTH_SHORT).show();
@@ -260,10 +292,10 @@ public class ProductDetail extends AppCompatActivity implements View.OnClickList
         boolean isFavorite = dbHelper.isFavorite(productId, userId);
         if (isFavorite) {
             dbHelper.removeFavorite(productId, userId);
-            Toast.makeText(this, "お気に入りから削除しました", Toast.LENGTH_SHORT).show();
+//            Toast.makeText(this, "お気に入りから削除しました", Toast.LENGTH_SHORT).show();
         } else {
             dbHelper.addFavorite(productId, userId);
-            Toast.makeText(this, "お気に入りに追加しました", Toast.LENGTH_SHORT).show();
+//            Toast.makeText(this, "お気に入りに追加しました", Toast.LENGTH_SHORT).show();
         }
         updateFavoriteButtonState();
     }

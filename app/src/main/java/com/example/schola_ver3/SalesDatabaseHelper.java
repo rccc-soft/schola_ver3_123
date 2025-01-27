@@ -7,7 +7,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 public class SalesDatabaseHelper extends SQLiteOpenHelper {
 
     // データベース名とバージョン
-    private static final int DATABASE_VERSION = 8;
+    private static final int DATABASE_VERSION = 9;
     private static final String DATABASE_NAME = "sales.db";
 
     // テーブル名とカラム名
@@ -20,8 +20,9 @@ public class SalesDatabaseHelper extends SQLiteOpenHelper {
             "CREATE TABLE " + TABLE_NAME + " (" +
                     MEMBER_ID + " TEXT PRIMARY KEY," +
 //                    SALES_AMOUNT + " INTEGER)";
-                    SALES_AMOUNT + " INTEGER," +
-                    "FOREIGN KEY (" + MEMBER_ID + ") REFERENCES Members(id))"; // 外部キー
+                    SALES_AMOUNT + " INTEGER " +
+                    ");";
+//                    "FOREIGN KEY (" + MEMBER_ID + ") REFERENCES Members(id))"; // 外部キー
 
     private static final String SQL_DELETE_ENTRIES =
             "DROP TABLE IF EXISTS " + TABLE_NAME;

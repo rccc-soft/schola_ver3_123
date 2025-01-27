@@ -110,44 +110,49 @@ public class HomePage extends AppCompatActivity implements View.OnClickListener 
         int productCount = Math.min(products.size(), 10);
         ArrayList<HashMap<String, Object>> selectedProducts = new ArrayList<>();
 
-        while (selectedProducts.size() < productCount) {
+        while (selectedProducts.size() < productCount && !products.isEmpty()) {
             int randomIndex = random.nextInt(products.size());
             HashMap<String, Object> randomProduct = products.get(randomIndex);
+            String productId = (String) randomProduct.get("商品ID");
 
-            if (!selectedProducts.contains(randomProduct)) {
+            if (!dbHelper.isProductSold(productId) && !selectedProducts.contains(randomProduct)) {
                 selectedProducts.add(randomProduct);
             }
+            products.remove(randomIndex); // この商品は選択済みまたは購入済みなので、リストから削除
         }
-
+//        for (int i = 0; i < selectedProducts.size(); i++) {
+//            HashMap<String, Object> product = selectedProducts.get(i);
+//            View productView = getLayoutInflater().inflate(R.layout.product_item, null);
         for (int i = 0; i < selectedProducts.size(); i++) {
             HashMap<String, Object> product = selectedProducts.get(i);
-            View productView = getLayoutInflater().inflate(R.layout.product_item, null);
+                View productView = getLayoutInflater().inflate(R.layout.product_item, null);
 
-            ImageView imageView = productView.findViewById(R.id.imageView1);
-            TextView nameTextView = productView.findViewById(R.id.textView1);
-            TextView priceTextView = productView.findViewById(R.id.textView5);
 
-            nameTextView.setText((String) product.get("商品名"));
-            priceTextView.setText("￥" + (String) product.get("金額"));
+                ImageView imageView = productView.findViewById(R.id.imageView1);
+                TextView nameTextView = productView.findViewById(R.id.textView1);
+                TextView priceTextView = productView.findViewById(R.id.textView5);
 
-            byte[] imageData = (byte[]) product.get("商品画像");
-            Bitmap bitmap = BitmapFactory.decodeByteArray(imageData, 0, imageData.length);
-            imageView.setImageBitmap(bitmap);
+                nameTextView.setText((String) product.get("商品名"));
+                priceTextView.setText("￥" + (String) product.get("金額"));
 
-            String productId = (String) product.get("商品ID");
-            productView.setOnClickListener(v -> navigateToProductDetail(product));
+                byte[] imageData = (byte[]) product.get("商品画像");
+                Bitmap bitmap = BitmapFactory.decodeByteArray(imageData, 0, imageData.length);
+                imageView.setImageBitmap(bitmap);
 
-            if (i == 0 || i == 1) {
-                layout1.addView(productView);
-            } else if (i == 2 || i == 3) {
-                layout2.addView(productView);
-            } else if (i == 4 || i == 5) {
-                layout3.addView(productView);
-            } else if (i == 6 || i == 7) {
-                layout4.addView(productView);
-            } else if (i == 8 || i == 9) {
-                layout5.addView(productView);
-            }
+                String productId = (String) product.get("商品ID");
+                productView.setOnClickListener(v -> navigateToProductDetail(product));
+
+                if (i == 0 || i == 1) {
+                    layout1.addView(productView);
+                } else if (i == 2 || i == 3) {
+                    layout2.addView(productView);
+                } else if (i == 4 || i == 5) {
+                    layout3.addView(productView);
+                } else if (i == 6 || i == 7) {
+                    layout4.addView(productView);
+                } else if (i == 8 || i == 9) {
+                    layout5.addView(productView);
+                }
         }
     }
 

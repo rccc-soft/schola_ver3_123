@@ -92,6 +92,30 @@ public class TourokuDatabaseHelper extends SQLiteOpenHelper {
         }
     }
 
+    public String getAddressByUserId(String userId) {
+        SQLiteDatabase db = this.getReadableDatabase();
+        String address = null;
+
+        Cursor cursor = db.query(
+                TABLE_DELIVERYADRESSES,
+                new String[]{COLUMN_ADRESS},
+                COLUMN_USER_ID + " = ?",
+                new String[]{userId},
+                null,
+                null,
+                null
+        );
+
+        if (cursor != null) {
+            if (cursor.moveToFirst()) {
+                address = cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_ADRESS));
+            }
+            cursor.close();
+        }
+
+        return address; // 住所が見つからない場合はnullを返す
+    }
+
 
     public Cursor getDeliveryAdresses(String userId) {
         SQLiteDatabase db = this.getReadableDatabase();

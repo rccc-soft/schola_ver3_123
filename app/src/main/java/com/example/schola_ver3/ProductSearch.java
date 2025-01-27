@@ -42,8 +42,6 @@ public class ProductSearch extends AppCompatActivity implements View.OnClickList
         if (v.getId() == R.id.searchbtn) {
             performSearch();
         } else if (v.getId() == R.id.backButton) {
-//            Intent intent = new Intent(this, HomePage.class);
-//            startActivity(intent);
             finish();
         }
     }
@@ -55,8 +53,28 @@ public class ProductSearch extends AppCompatActivity implements View.OnClickList
             return;
         }
 
+        if (query.length() > 30) {
+            Toast.makeText(this, "検索キーワードは30文字以内で入力してください", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        if (containsSpecialChars(query)) {
+            Toast.makeText(this, "検索キーワードに特殊文字は使用できません", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
         Intent intent = new Intent(this, SearchResult.class);
         intent.putExtra("SEARCH_QUERY", query);
         startActivity(intent);
+    }
+
+    private boolean containsSpecialChars(String input) {
+        String specialChars = "\"'\\;:[]{}";
+        for (char c : specialChars.toCharArray()) {
+            if (input.indexOf(c) != -1) {
+                return true;
+            }
+        }
+        return false;
     }
 }

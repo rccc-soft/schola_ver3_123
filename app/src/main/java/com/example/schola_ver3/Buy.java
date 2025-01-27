@@ -14,6 +14,7 @@ import android.widget.TextView;
 import android.util.Log;
 import androidx.appcompat.app.AppCompatActivity;
 import android.widget.ArrayAdapter;
+import android.widget.Toast;
 
 public class Buy extends AppCompatActivity implements View.OnClickListener{
     private static final String TAG = "Buy";
@@ -26,9 +27,11 @@ public class Buy extends AppCompatActivity implements View.OnClickListener{
     private TextView priceTextView;
     private Button buyButton;
     private ProductDatabaseHelper dbHelper;
-    private DatabaseHelper deliveryDbHelper;
+    private DatabaseHelper DatabaseHelper;
     private String productId;
     private ImageButton imageButton2;
+
+    private String fullAddress;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,7 +43,7 @@ public class Buy extends AppCompatActivity implements View.OnClickListener{
 
         initializeViews();
         dbHelper = new ProductDatabaseHelper(this);
-        deliveryDbHelper = new DatabaseHelper(this);
+        DatabaseHelper = new DatabaseHelper(this);
 
         Intent intent = getIntent();
         productId = intent.getStringExtra("商品ID");
@@ -91,12 +94,12 @@ public class Buy extends AppCompatActivity implements View.OnClickListener{
 
         Log.d(TAG, "User ID: " + userId);
 
-        Cursor cursor = deliveryDbHelper.getDeliveryAddressByMemberId(userId);
+        Cursor cursor = DatabaseHelper.getDeliveryAddressByMemberId(userId);
         if (cursor != null && cursor.moveToFirst()) {
             String postalCode = cursor.getString(cursor.getColumnIndexOrThrow(DatabaseHelper.COLUMN_POSTAL_CODE));
             String address = cursor.getString(cursor.getColumnIndexOrThrow(DatabaseHelper.COLUMN_ADDRESS));
             if (address != null && !address.isEmpty()) {
-                String fullAddress = postalCode + "\n" + address;
+                fullAddress = postalCode + "\n" + address;
                 addressTextView.setText(fullAddress);
             } else {
                 addressTextView.setText("住所が見つかりません");
@@ -126,13 +129,17 @@ public class Buy extends AppCompatActivity implements View.OnClickListener{
     }
 
     private void setupBuyButtonListener() {
-        buyButton.setOnClickListener(v -> {
-            String selectedPaymentMethod = paymentMethodSpinner.getSelectedItem().toString();
-            Intent intent = new Intent(Buy.this, BuyCheck.class);
-            intent.putExtra("paymentMethod", selectedPaymentMethod);
-            intent.putExtra("product_id", productId);
-            startActivityForResult(intent, REQUEST_BUY_CHECK);
-        });
+        if (fullAddress != null) {
+            buyButton.setOnClickListener(v -> {
+                String selectedPaymentMethod = paymentMethodSpinner.getSelectedItem().toString();
+                Intent intent = new Intent(Buy.this, BuyCheck.class);
+                intent.putExtra("paymentMethod", selectedPaymentMethod);
+                intent.putExtra("product_id", productId);
+                startActivityForResult(intent, REQUEST_BUY_CHECK);
+            });
+        } else {
+            Toast.makeText(this, "住所が登録されていません", Toast.LENGTH_SHORT).show();
+        }
     }
 
     @Override

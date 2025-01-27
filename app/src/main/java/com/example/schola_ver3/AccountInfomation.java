@@ -134,7 +134,7 @@ public class AccountInfomation extends AppCompatActivity implements View.OnClick
     @Override
     public void onClick(View v) {
         if (v.getId() == R.id.backButton) {
-            Intent intent = new Intent(getApplication(), Setting.class);
+            Intent intent = new Intent(getApplication(), MyPage.class);
             startActivity(intent);
         } else if (v.getId() == R.id.amountInputButton) {
 

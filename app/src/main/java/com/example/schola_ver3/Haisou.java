@@ -17,7 +17,7 @@ public class Haisou extends AppCompatActivity implements View.OnClickListener {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
-        setContentView(R.layout.haisou);
+        setContentView(R.layout.activity_haisou);
 
         finish = findViewById(R.id.finish);
         finish.setOnClickListener(this);

@@ -1,15 +1,19 @@
 package com.example.schola_ver3;
 
+import static com.example.schola_ver3.DatabaseHelper.COLUMN_MEMBER_ID;
+import static com.example.schola_ver3.DatabaseHelper.TABLE_MEMBERS;
+
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.util.Log;
 
 public class CreditDatabaseHelper extends SQLiteOpenHelper {
 
     // データベース名とバージョン
-    private static final int DATABASE_VERSION = 8;
+    private static final int DATABASE_VERSION = 10;
     private static final String DATABASE_NAME = "credit.db";
 
     // テーブル名とカラム名
@@ -30,8 +34,10 @@ public class CreditDatabaseHelper extends SQLiteOpenHelper {
                     CARD_NUMBER + " TEXT NOT NULL," +
                     EXPIRATION_DATE + " TEXT NOT NULL," +
                     CARD_CVCCVV + " TEXT NOT NULL," +
-                    CARD_NAME + " TEXT NOT NULL," +
-                    "FOREIGN KEY (" + MEMBER_ID + ") REFERENCES Members(id))";
+                    CARD_NAME + " TEXT NOT NULL" +
+                    ");";
+//                    "FOREIGN KEY (" + MEMBER_ID + ") REFERENCES Members(id))";
+//                    "FOREIGN KEY (" + MEMBER_ID + ") REFERENCES " + TABLE_MEMBERS + "(" + COLUMN_MEMBER_ID + ")" + ");";
 
     private static final String SQL_DELETE_ENTRIES =
             "DROP TABLE IF EXISTS " + TABLE_NAME;
@@ -117,6 +123,8 @@ public class CreditDatabaseHelper extends SQLiteOpenHelper {
                 "member_id = ?",                   // 条件（WHERE句）
                 new String[]{memberId} // 条件のパラメータ
         );
+
+//        Log.d("tablecreate", "テーブル内容: " + TABLE_NAME + values + memberId);
 
         // 更新の結果を確認
         if (rowsAffected > 0) {

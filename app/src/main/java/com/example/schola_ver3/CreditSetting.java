@@ -90,6 +90,8 @@ public class CreditSetting extends AppCompatActivity implements View.OnClickList
         dbHelper = new CreditDatabaseHelper(this);
         db = dbHelper.getWritableDatabase();  // 書き込み可能なデータベースを取得
 
+        dbHelper.onConfigure(db);
+
         // MEMBER_IDを引数として渡してデフォルトデータを確認して挿入
         dbHelper.checkAndInsertDefaultData(db, userId);
 

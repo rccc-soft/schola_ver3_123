@@ -132,6 +132,20 @@ public class MyPage extends AppCompatActivity implements View.OnClickListener{
         SharedPreferences prefs = getSharedPreferences("UserPrefs", MODE_PRIVATE);
         String userMemberId = prefs.getString("user_id", "");
 
+        TextView salesAmountTextView = findViewById(R.id.textView6); // 売上金額表示用
+
+        if (!userMemberId.isEmpty()) {
+            // 売上金額を取得
+            int salesAmount = dbHelper.getSalesAmount(userMemberId);
+            // 売上金額を TextView にセット
+            salesAmountTextView.setText(String.valueOf(salesAmount));
+            Log.d("MyPage", "Sales Amount retrieved: " + salesAmount);
+        } else {
+            salesAmountTextView.setText("0"); // デフォルト値を設定
+            Log.e("MyPage", "User ID not found in SharedPreferences");
+        }
+
+
         if (!userMemberId.isEmpty()) {
             displayUsername(userMemberId);
         } else {
@@ -218,8 +232,8 @@ public class MyPage extends AppCompatActivity implements View.OnClickListener{
             Intent intent = new Intent(this, ExhibitList.class);
             startActivity(intent);
         } else if (id == R.id.purchasedbtn) {
-//            Intent intent = new Intent(this, .class);
-//            startActivity(intent);
+            Intent intent = new Intent(this, PurchasedList.class);
+            startActivity(intent);
         } else if (id == R.id.salestransfer) {
             Intent intent = new Intent(this, AccountInfomation.class);
             startActivity(intent);

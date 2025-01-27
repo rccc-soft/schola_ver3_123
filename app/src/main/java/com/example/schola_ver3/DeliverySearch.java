@@ -14,8 +14,6 @@ import android.widget.ListView;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.example.korekore.R;
-
 import java.util.ArrayList;
 
 public class DeliverySearch extends AppCompatActivity {

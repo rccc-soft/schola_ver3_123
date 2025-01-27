@@ -195,12 +195,16 @@ public class EvaluationSell extends AppCompatActivity implements View.OnClickLis
     }
 
     private void setDeliveryMethod() {
-//        Cursor cursor = dbHelper.getProductInfo(productId);
-        Cursor cursor = dbHelper.getProductInfo(temporaryProductId);
+        String productId = getIntent().getStringExtra("商品ID");
+        if (productId == null) {
+            Log.e("EvaluationSell", "setDeliveryMethod: productId is null");
+            return;
+        }
+        Cursor cursor = dbHelper.getProductInfo(productId);
         if (cursor != null && cursor.moveToFirst()) {
-            sellerId = cursor.getString(cursor.getColumnIndexOrThrow(ProductDatabaseHelper.COLUMN_SELLER_ID));
+            // 既存のコード
         } else {
-            Log.e(TAG, "商品情報の取得に失敗しました。");
+            Log.e("EvaluationSell", "setDeliveryMethod: No product found for ID " + productId);
         }
     }
 }

@@ -26,9 +26,9 @@ public class SalesTransferSuccess extends AppCompatActivity implements View.OnCl
 
     @Override
     public void onClick(View v) {
-        // マイページ画面へ
+        // ホーム画面へ
         if (v.getId() == R.id.homeButton) {
-            Intent intent = new Intent(getApplication(), MyPage.class);
+            Intent intent = new Intent(getApplication(), HomePage.class);
             startActivity(intent);
         }
     }

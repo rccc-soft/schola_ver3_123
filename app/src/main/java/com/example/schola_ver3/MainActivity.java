@@ -8,7 +8,7 @@ import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-//import com.example.korekore.R;
+;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
     private ProductDatabaseHelper dbHelper;

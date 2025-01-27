@@ -11,8 +11,6 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.example.korekore.R;
-
 public class DeliveryView extends AppCompatActivity {
 
     private ImageButton backButton;

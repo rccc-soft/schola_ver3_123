@@ -1,8 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools">
+    xmlns:tools="http://schemas.android.com/tools"
+    package="com.example.schola_ver3">
+
+    <uses-permission android:name="android.permission.INTERNET" />
+<!--    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />-->
+<!--    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />-->
+
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
 
     <application
+        android:networkSecurityConfig="@xml/network_security_config"
+
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
         android:fullBackupContent="@xml/backup_rules"
@@ -13,7 +23,7 @@
         android:theme="@style/Theme.Schola_ver3"
         tools:targetApi="31">
         <activity
-            android:name=".HomePage"
+            android:name=".Boot"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -53,8 +63,14 @@
         <activity
             android:name=".MyPage"
             android:exported="false" />
+        <activity android:name=".AccountInfomation" />
+        <activity android:name=".Login" />
+        <activity android:name=".Logoutsub" />
         <activity android:name=".MainActivity_egu" />
+        <activity android:name=".MemberRegistration" />
+        <activity android:name=".MemberComp" />
         <activity android:name=".TestActivity" />
+        <activity android:name=".HomePage" />
         <activity android:name=".Exhibit" />
         <activity android:name=".ProductSearch" />
         <activity android:name=".ExhibitList" />
@@ -62,16 +78,27 @@
         <activity android:name=".ExhibitSave" />
         <activity android:name=".ExhibitSuccess" />
         <activity android:name=".ExhibitEdit" />
+        <activity android:name=".ExhibitDetails" />
+        <activity android:name=".ExhibitShiped" />
+<!--        <activity android:name=".QuickResponse" />-->
         <activity android:name=".ProductDetail" />
         <activity android:name=".ExhibitCancel" />
         <activity android:name=".Buy" />
         <activity android:name=".BuyCheck" />
         <activity android:name=".Setting" />
+        <activity android:name=".MemberView" />
+        <activity android:name=".MemberUpdate" />
+        <activity android:name=".MemberDelete" />
         <activity android:name=".Rule" />
         <activity android:name=".SalesTransfer" />
         <activity android:name=".SalesTransferCheck" />
         <activity android:name=".SalesTransferSuccess" />
+        <activity android:name=".ShippingRegistration" />
         <activity android:name=".CreditSetting" />
+        <activity android:name=".ParentRegistration" />
+        <activity android:name=".ParentCertification" />
+        <activity android:name=".FavoriteList" />
+        <activity android:name=".PurchasedList" />
     </application>
 
 </manifest>

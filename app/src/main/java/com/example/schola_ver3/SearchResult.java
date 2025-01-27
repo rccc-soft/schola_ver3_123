@@ -86,19 +86,22 @@ public class SearchResult extends AppCompatActivity implements View.OnClickListe
 
         ArrayList<HashMap<String, Object>> results = new ArrayList<>();
         while (cursor.moveToNext()) {
-            HashMap<String, Object> item = new HashMap<>();
-            for (String column : projection) {
-                if (column.equals("商品画像")) {
-                    item.put(column, cursor.getBlob(cursor.getColumnIndex(column)));
-                } else if (column.equals("金額")) {
-                    String price = cursor.getString(cursor.getColumnIndex(column));
-                    item.put(column, price); // 元の価格を保存
-                    item.put("表示用金額", "￥" + price); // 表示用に￥を追加
-                } else {
-                    item.put(column, cursor.getString(cursor.getColumnIndex(column)));
+            String productId = cursor.getString(cursor.getColumnIndex("商品ID"));
+            if (!dbHelper.isProductSold(productId)) {
+                HashMap<String, Object> item = new HashMap<>();
+                for (String column : projection) {
+                    if (column.equals("商品画像")) {
+                        item.put(column, cursor.getBlob(cursor.getColumnIndex(column)));
+                    } else if (column.equals("金額")) {
+                        String price = cursor.getString(cursor.getColumnIndex(column));
+                        item.put(column, price); // 元の価格を保存
+                        item.put("表示用金額", "￥" + price); // 表示用に￥を追加
+                    } else {
+                        item.put(column, cursor.getString(cursor.getColumnIndex(column)));
+                    }
                 }
+                results.add(item);
             }
-            results.add(item);
         }
         cursor.close();
 
@@ -137,7 +140,7 @@ public class SearchResult extends AppCompatActivity implements View.OnClickListe
         if (v.getId() == R.id.editTextText) {
             intent = new Intent(getApplication(), ProductSearch.class);
         } else if(v.getId() == R.id.backButton) {
-            intent = new Intent(getApplication(), ProductSearch.class);
+            finish();
         }
         if (intent != null) {
             startActivity(intent);
